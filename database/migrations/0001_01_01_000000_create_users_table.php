@@ -16,6 +16,15 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            
+            // --- Nuevos campos agregados ---
+            $table->string('telefono')->nullable();
+            $table->string('rol')->default('vendedor');
+            $table->string('departamento')->nullable();
+            $table->boolean('activo')->default(true);
+            $table->timestamp('ultimo_acceso')->nullable();
+            // -------------------------------
+
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

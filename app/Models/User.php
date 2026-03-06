@@ -20,6 +20,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'telefono',
+        'rol',
+        'departamento',
+        'activo',
         'password',
     ];
 
@@ -43,6 +47,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'activo' => 'boolean', // Agregado para manejar el estado como booleano real
+            'ultimo_acceso' => 'datetime', // Útil si decides actualizar este campo luego
         ];
     }
 }
