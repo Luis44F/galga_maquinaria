@@ -6,20 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('maquinas_modelos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('categoria_id')->constrained('categorias');
+            $table->string('marca', 100)->nullable();
+            $table->string('modelo', 100);
+            $table->string('tipo_maquina', 255)->nullable();
+            $table->text('especificaciones')->nullable();
+            $table->boolean('activo')->default(true);
             $table->timestamps();
+            
+            $table->index('modelo');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('maquinas_modelos');
