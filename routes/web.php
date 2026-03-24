@@ -117,7 +117,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware(['auth'])->group(function () {
     
     // ==================== DASHBOARDS ====================
-    
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard-ventas', [UserController::class, 'dashboardVentas'])->name('dashboard.ventas');
     Route::get('/dashboard-cartera', [UserController::class, 'dashboardCartera'])->name('dashboard.cartera');
@@ -131,21 +130,24 @@ Route::middleware(['auth'])->group(function () {
     // ==================== CRUD DE IMPORTACIONES Y MAQUINARIA ====================
     Route::prefix('importaciones')->name('importaciones.')->group(function () {
         
-        // ==================== MAQUINARIA DISPONIBLE (PRIMERO) ====================
+        // ==================== MAQUINARIA DISPONIBLE ====================
+        // ✅ CORREGIDO: Nombres de rutas que coinciden con el JavaScript del dashboard
         Route::get('/maquinaria-disponible', [MaquinariaDisponibleController::class, 'index'])->name('maquinaria-disponible');
-        Route::get('/maquinaria-disponible/estadisticas/resumen', [MaquinariaDisponibleController::class, 'estadisticas'])->name('maquinaria-disponible.estadisticas');
+        Route::get('/maquinaria-disponible/estadisticas', [MaquinariaDisponibleController::class, 'estadisticas'])->name('maquinaria-disponible.estadisticas');
         Route::get('/maquinaria-disponible/marcas', [MaquinariaDisponibleController::class, 'getMarcas'])->name('maquinaria-disponible.marcas');
-        Route::post('/maquinaria-disponible/{id}/cambiar-estado', [MaquinariaDisponibleController::class, 'cambiarEstado'])->name('maquinaria-disponible.cambiar-estado');
-        Route::post('/maquinaria-disponible/{id}/reservar', [MaquinariaDisponibleController::class, 'reservar'])->name('maquinaria-disponible.reservar');
-        Route::post('/maquinaria-disponible/{id}/vender', [MaquinariaDisponibleController::class, 'vender'])->name('maquinaria-disponible.vender');
+        Route::post('/maquinaria-disponible/cambiar-estado/{id}', [MaquinariaDisponibleController::class, 'cambiarEstado'])->name('maquinaria-disponible.cambiar-estado');
+        Route::post('/maquinaria-disponible/reservar/{id}', [MaquinariaDisponibleController::class, 'reservar'])->name('maquinaria-disponible.reservar');
+        Route::post('/maquinaria-disponible/vender/{id}', [MaquinariaDisponibleController::class, 'vender'])->name('maquinaria-disponible.vender');
         
         // ==================== CRUD DE IMPORTACIONES ====================
         Route::get('/', [ImportacionController::class, 'index'])->name('index');
         Route::get('/create', [ImportacionController::class, 'create'])->name('create');
         Route::post('/', [ImportacionController::class, 'store'])->name('store');
         
+        // RUTA PARA CREACIÓN MANUAL DE MÁQUINAS
+        Route::post('/{orden}/crear-maquinas', [ImportacionController::class, 'crearMaquinas'])->name('crear-maquinas');
+
         // ==================== RUTAS DINÁMICAS (AL FINAL) ====================
-        // ✅ Usan Route Model Binding con 'numero_orden'
         Route::get('/{orden}', [ImportacionController::class, 'show'])->name('show');
         Route::get('/{orden}/edit', [ImportacionController::class, 'edit'])->name('edit');
         Route::put('/{orden}', [ImportacionController::class, 'update'])->name('update');

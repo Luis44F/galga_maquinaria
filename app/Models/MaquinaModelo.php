@@ -15,20 +15,48 @@ class MaquinaModelo extends Model
         'categoria_id',
         'marca',
         'modelo',
-        'tipo',
-        'descripcion',
+        'tipo_maquina',     // Estandarizado según tu corrección
+        'especificaciones',  // Para detalles técnicos
+        'descripcion',       // Mantenido de tu versión previa
         'activo'
     ];
 
-    // ✅ RELACIÓN CON CATEGORÍA (LA QUE FALTA)
+    protected $casts = [
+        'activo' => 'boolean',
+        'especificaciones' => 'array' // Útil si guardas las specs como JSON
+    ];
+
+    /**
+     * Relación con la categoría (Una categoría tiene muchos modelos)
+     */
     public function categoria()
     {
         return $this->belongsTo(Categoria::class, 'categoria_id');
     }
 
-    // Relación con máquinas
+    /**
+     * Relación con máquinas individuales (Un modelo tiene muchas máquinas físicas)
+     * ✅ Esta es la relación inversa necesaria para Maquina::modelo()
+     */
     public function maquinas()
     {
         return $this->hasMany(Maquina::class, 'modelo_id');
+    }
+
+    /**
+     * Scope para modelos activos
+     */
+    public function scopeActivos($query)
+    {
+        return $query->where('activo', true);
+    }
+
+    /**
+     * Accessor para nombre completo (Marca + Modelo)
+     * Útil para mostrar en selects o reportes
+     */
+    public function getNombreCompletoAttribute()
+    {
+        return "{$this->marca} {$this->modelo}";
     }
 }

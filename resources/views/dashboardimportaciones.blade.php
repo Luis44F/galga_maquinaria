@@ -13,6 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <style>
+        /* ... (todo tu CSS existente, sin cambios) ... */
         * {
             margin: 0;
             padding: 0;
@@ -1116,7 +1117,7 @@
                                     <tr>
                                         <th>N° Orden</th>
                                         <th>Proveedor</th>
-                                        <th>Máquina</th>
+                                        <th>Modelo</th>
                                         <th>Cant.</th>
                                         <th>Monto</th>
                                         <th>Fecha Est.</th>
@@ -1132,8 +1133,18 @@
                                             {{ $orden->proveedor }}<br>
                                             <small style="color: var(--text-dim);">{{ $orden->pais }}</small>
                                         </td>
-                                        <td>{{ $orden->maquina }}</td>
-                                        <td>{{ $orden->cantidad }}</td>
+                                        <td>
+                                            @if($orden->modelo_maquina)
+                                                <strong>{{ $orden->modelo_maquina }}</strong>
+                                            @else
+                                                <span style="color: var(--text-dim);">No especificado</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="badge" style="background: rgba(14, 165, 233, 0.2); color: var(--primary);">
+                                                {{ $orden->cantidad_maquinas ?? 1 }}
+                                            </span>
+                                        </td>
                                         <td>${{ number_format(($orden->monto ?? 0) / 1000000, 0) }}M</td>
                                         <td>
                                             {{ $orden->fecha_estimada ? $orden->fecha_estimada->format('d/m') : 'N/A' }}<br>
@@ -1146,7 +1157,6 @@
                                             {{ ucfirst($orden->prioridad ?? 'media') }}
                                         </td>
                                         <td>
-                                            {{-- ✅ CORREGIDO: Usar el ID en lugar del número de orden --}}
                                             <button class="btn-sm" title="Ver detalles" onclick="verOrden({{ $orden->id }})">
                                                 <i class="fas fa-eye"></i>
                                             </button>
@@ -1234,9 +1244,9 @@
                         <span class="badge badge-success">{{ $proximas_llegadas->count() ?? 0 }} próximas</span>
                     </div>
                     <div class="table-responsive">
-                        <table>
+                         <table>
                             <thead>
-                                <tr>
+                                 <tr>
                                     <th>Contenedor</th>
                                     <th>Máquina</th>
                                     <th>Puerto</th>
@@ -1270,7 +1280,6 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{-- ✅ CORREGIDO: Extraer el ID del contenedor (CONT-XXXXXX) --}}
                                         @php
                                             $idFromContenedor = str_replace('CONT-', '', $llegada->contenedor);
                                         @endphp

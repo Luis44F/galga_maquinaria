@@ -24,7 +24,9 @@ class OrdenCompraProveedor extends Model
         'fecha_llegada_real',
         'estado',
         'observaciones',
-        'created_by'
+        'created_by',
+        'modelo_maquina',
+        'cantidad_maquinas'
     ];
 
     protected $casts = [

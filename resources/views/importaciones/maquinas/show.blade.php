@@ -29,7 +29,7 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --secondary: #64748b;
+            --info: #3b82f6;
             --card-bg: #111827;
             --card-border: #1f2937;
             --text-light: #f8fafc;
@@ -46,6 +46,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         h1 {
@@ -62,6 +64,9 @@
             border-radius: 10px;
             text-decoration: none;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-back:hover {
@@ -74,6 +79,21 @@
             border: 1px solid var(--card-border);
             border-radius: 24px;
             padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .detail-row {
@@ -81,10 +101,17 @@
             margin-bottom: 16px;
             padding-bottom: 16px;
             border-bottom: 1px solid var(--card-border);
+            flex-wrap: wrap;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
         .detail-label {
-            width: 200px;
+            width: 180px;
             color: var(--text-dim);
             font-weight: 500;
         }
@@ -96,28 +123,29 @@
         }
 
         .badge {
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 30px;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 600;
             display: inline-block;
         }
 
-        /* Colores dinámicos para los estados */
-        .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .badge-primary { background: rgba(14, 165, 233, 0.2); color: var(--primary); }
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .badge-info { background: rgba(14, 165, 233, 0.2); color: var(--primary); }
+        .badge-primary { background: rgba(59, 130, 246, 0.2); color: var(--info); }
+        .badge-secondary { background: rgba(100, 116, 139, 0.2); color: #94a3b8; }
         .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .badge-secondary { background: rgba(100, 116, 139, 0.2); color: var(--secondary); }
 
         .actions {
             display: flex;
             gap: 12px;
             margin-top: 24px;
             justify-content: flex-end;
+            flex-wrap: wrap;
         }
 
-        .btn-edit, .btn-delete {
+        .btn-edit, .btn-delete, .btn-action {
             padding: 10px 24px;
             border-radius: 10px;
             text-decoration: none;
@@ -125,57 +153,112 @@
             transition: all 0.3s;
             cursor: pointer;
             border: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn-edit {
-            background: var(--warning);
-            color: #0a0f1c;
-        }
+        .btn-edit { background: var(--warning); color: #0a0f1c; }
+        .btn-delete { background: var(--danger); color: white; }
+        .btn-action { background: var(--primary); color: white; }
 
-        .btn-delete {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-edit:hover, .btn-delete:hover {
+        .btn-edit:hover, .btn-delete:hover, .btn-action:hover {
             transform: translateY(-2px);
-            opacity: 0.9;
+            filter: brightness(1.1);
+        }
+
+        .text-muted {
+            color: var(--text-dim);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            color: var(--text-dim);
+            font-weight: 500;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .detail-label {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            
+            .detail-value {
+                width: 100%;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn-edit, .btn-delete, .btn-action {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Detalles de la Máquina</h1>
-            <a href="{{ route('maquinaria-disponible.test') }}" class="btn-back">
+            <h1>Detalles de Máquina</h1>
+            <a href="{{ url()->previous() }}" class="btn-back">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
         </div>
 
         <div class="card">
-            <div class="detail-row">
-                <div class="detail-label">ID:</div>
-                <div class="detail-value">#{{ $maquina->id }}</div>
+            <div class="card-title">
+                <span><i class="fas fa-cog" style="color: var(--primary); margin-right: 8px;"></i> Máquina #{{ $maquina->id }}</span>
+                <span class="badge badge-{{ $maquina->estado_color }}">
+                    {{ $maquina->estado_display }}
+                </span>
             </div>
 
             <div class="detail-row">
                 <div class="detail-label">Modelo:</div>
-                <div class="detail-value">{{ optional($maquina->modelo)->modelo ?? 'N/A' }}</div>
-            </div>
-
-            <div class="detail-row">
-                <div class="detail-label">Marca:</div>
-                <div class="detail-value">{{ optional($maquina->modelo)->marca ?? 'N/A' }}</div>
-            </div>
-
-            <div class="detail-row">
-                <div class="detail-label">Categoría:</div>
-                <div class="detail-value">{{ optional(optional($maquina->modelo)->categoria)->nombre ?? 'N/A' }}</div>
+                <div class="detail-value">
+                    @php
+                        // Cargar el modelo manualmente si no está cargado
+                        $modeloData = $maquina->modelo;
+                        if (!$modeloData && $maquina->modelo_id) {
+                            $modeloData = \App\Models\MaquinaModelo::find($maquina->modelo_id);
+                        }
+                    @endphp
+                    
+                    @if($modeloData)
+                        <strong>{{ $modeloData->marca ?? 'N/A' }} {{ $modeloData->modelo ?? 'N/A' }}</strong>
+                        <br><small class="text-muted">ID: {{ $modeloData->id }}</small>
+                    @else
+                        <span class="text-muted">No especificado (ID en tabla: {{ $maquina->modelo_id ?? 'NULL' }})</span>
+                    @endif
+                </div>
             </div>
 
             <div class="detail-row">
                 <div class="detail-label">Número de Serie:</div>
-                <div class="detail-value">{{ $maquina->numero_serie ?? 'N/A' }}</div>
+                <div class="detail-value"><code>{{ $maquina->numero_serie ?? 'N/A' }}</code></div>
             </div>
 
             <div class="detail-row">
@@ -184,91 +267,112 @@
             </div>
 
             <div class="detail-row">
-                <div class="detail-label">Estado:</div>
-                <div class="detail-value">
-                    @php
-                        $estadoColors = [
-                            'disponible' => 'success',
-                            'en_bodega' => 'info',
-                            'en_transito' => 'warning',
-                            'en_puerto' => 'primary',
-                            'reparacion' => 'danger',
-                            'fabricacion' => 'info',
-                            'pendiente_despacho' => 'warning',
-                            'cancelado' => 'secondary',
-                            'vendida' => 'secondary'
-                        ];
-                        $estadoTextos = [
-                            'disponible' => '📦 Disponible',
-                            'en_bodega' => '🏭 En Bodega',
-                            'en_transito' => '🚢 En Tránsito',
-                            'en_puerto' => '⚓ En Puerto',
-                            'reparacion' => '🔧 En Reparación',
-                            'fabricacion' => '🏗️ En Fabricación',
-                            'pendiente_despacho' => '⏳ Vendida (Pendiente Despacho)',
-                            'cancelado' => '❌ Cancelado',
-                            'vendida' => '💰 Vendida'
-                        ];
-                    @endphp
-                    <span class="badge badge-{{ $estadoColors[$maquina->estado] ?? 'secondary' }}">
-                        {{ $estadoTextos[$maquina->estado] ?? $maquina->estado }}
-                    </span>
-                </div>
+                <div class="detail-label">Ubicación Actual:</div>
+                <div class="detail-value">{{ $maquina->ubicacion_actual ?? 'N/A' }}</div>
             </div>
 
             <div class="detail-row">
                 <div class="detail-label">Precio de Compra:</div>
-                <div class="detail-value">${{ number_format($maquina->precio_compra, 0, ',', '.') }}</div>
+                <div class="detail-value">{{ $maquina->precio_compra_formateado ?? 'N/A' }}</div>
             </div>
 
             <div class="detail-row">
                 <div class="detail-label">Precio de Venta:</div>
-                <div class="detail-value">${{ number_format($maquina->precio_venta, 0, ',', '.') }}</div>
+                <div class="detail-value">{{ $maquina->precio_venta_formateado ?? 'N/A' }}</div>
             </div>
 
             <div class="detail-row">
                 <div class="detail-label">Fecha de Ingreso:</div>
-                <div class="detail-value">{{ $maquina->created_at->format('d/m/Y') }}</div>
+                <div class="detail-value">
+                    @if($maquina->fecha_ingreso)
+                        {{ $maquina->fecha_ingreso->format('d/m/Y') }}
+                    @else
+                        N/A
+                    @endif
+                </div>
             </div>
 
-            @if($maquina->observaciones)
-            <div class="detail-row" style="border-bottom: none;">
-                <div class="detail-label">Observaciones:</div>
-                <div class="detail-value" style="font-weight: 400; color: var(--text-dim);">
-                    {{ $maquina->observaciones }}
+            @if($maquina->fecha_venta)
+            <div class="detail-row">
+                <div class="detail-label">Fecha de Venta:</div>
+                <div class="detail-value">
+                    @if($maquina->fecha_venta)
+                        {{ $maquina->fecha_venta->format('d/m/Y') }}
+                    @else
+                        N/A
+                    @endif
                 </div>
+            </div>
+            @endif
+
+            @if($maquina->ordenCompra)
+            <div class="detail-row">
+                <div class="detail-label">Orden de Importación:</div>
+                <div class="detail-value">
+                    <a href="{{ route('importaciones.show', $maquina->ordenCompra->id) }}" style="color: var(--primary); text-decoration: none;">
+                        {{ $maquina->ordenCompra->numero_orden ?? 'N/A' }}
+                    </a>
+                </div>
+            </div>
+            @endif
+
+            @if($maquina->observaciones)
+            <div class="detail-row">
+                <div class="detail-label">Observaciones:</div>
+                <div class="detail-value">{{ $maquina->observaciones }}</div>
             </div>
             @endif
 
             <div class="actions">
                 <a href="{{ route('maquinas.edit', $maquina->id) }}" class="btn-edit">
-                    <i class="fas fa-edit"></i> Editar
+                    <i class="fas fa-edit"></i> Editar Máquina
                 </a>
-                <button onclick="eliminarMaquina({{ $maquina->id }})" class="btn-delete">
-                    <i class="fas fa-trash"></i> Eliminar
-                </button>
+                <form action="{{ route('maquinas.destroy', $maquina->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar esta máquina?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-delete">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </form>
             </div>
         </div>
-    </div>
 
-    <script>
-        function eliminarMaquina(id) {
-            if (confirm('¿Estás seguro de eliminar esta máquina?')) {
-                fetch(`/maquinas/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = '{{ route("maquinaria-disponible.test") }}';
-                    }
-                });
-            }
-        }
-    </script>
+        @if($maquina->seguimientosEstado && $maquina->seguimientosEstado->isNotEmpty())
+        <div class="card">
+            <div class="card-title">
+                <span><i class="fas fa-history" style="color: var(--info); margin-right: 8px;"></i> Historial de Estados</span>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Observaciones</th>
+                        </thead>
+                        <tbody>
+                            @foreach($maquina->seguimientosEstado as $seguimiento)
+                            <tr>
+                                <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">
+                                    @if($seguimiento->created_at)
+                                        {{ $seguimiento->created_at->format('d/m/Y H:i') }}
+                                    @else
+                                        N/A
+                                    @endif
+                                
+                                <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">
+                                    <span class="badge badge-{{ $seguimiento->estado_color ?? 'secondary' }}">
+                                        {{ $seguimiento->estado_display ?? $seguimiento->estado }}
+                                    </span>
+                                
+                                <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">{{ $seguimiento->observaciones ?? '-' }}
+                              
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+    </div>
 </body>
 </html>

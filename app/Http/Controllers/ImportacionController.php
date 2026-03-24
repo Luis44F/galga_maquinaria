@@ -11,20 +11,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class ImportacionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $usuario = Auth::user();
         
         $query = OrdenCompraProveedor::with(['creador']);
 
-        // Filtros
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
@@ -85,9 +82,6 @@ class ImportacionController extends Controller
         return view('importaciones.index', compact('usuario', 'ordenes', 'estados'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
         $usuario = Auth::user();
@@ -112,9 +106,6 @@ class ImportacionController extends Controller
         return view('importaciones.create', compact('usuario', 'proveedores', 'modelos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -123,6 +114,9 @@ class ImportacionController extends Controller
             'fecha_orden' => 'required|date',
             'fecha_estimada_llegada' => 'nullable|date|after_or_equal:fecha_orden',
             'estado' => 'required|in:pendiente,en_fabricacion,en_transito,en_puerto,recibida,cancelada',
+            'modelo_maquina' => 'nullable|string|max:255',
+            'cantidad_maquinas' => 'nullable|integer|min:1|max:999',
+            'observaciones' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -138,6 +132,8 @@ class ImportacionController extends Controller
                 'fecha_estimada_llegada' => $request->fecha_estimada_llegada,
                 'fecha_llegada_real' => $request->fecha_llegada_real,
                 'estado' => $request->estado,
+                'modelo_maquina' => $request->modelo_maquina,
+                'cantidad_maquinas' => $request->cantidad_maquinas,
                 'observaciones' => $request->observaciones,
                 'created_by' => Auth::id()
             ]);
@@ -169,15 +165,10 @@ class ImportacionController extends Controller
         }
     }
 
-    /**
-     * ✅ Display the specified resource - CORREGIDO para usar Route Model Binding
-     */
     public function show(OrdenCompraProveedor $orden, Request $request)
     {
         $usuario = Auth::user();
-        
-        // Cargar relaciones necesarias
-        $orden->load(['creador', 'detalles', 'maquinas']);
+        $orden->load(['creador', 'detalles.modelo', 'maquinas.modelo']);
         
         if ($request->ajax()) {
             try {
@@ -197,9 +188,6 @@ class ImportacionController extends Controller
         return view('importaciones.show', compact('usuario', 'orden'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(OrdenCompraProveedor $orden, Request $request)
     {
         $usuario = Auth::user();
@@ -224,17 +212,18 @@ class ImportacionController extends Controller
         return view('importaciones.edit', compact('usuario', 'orden', 'proveedores', 'modelos'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, OrdenCompraProveedor $orden)
     {
         $request->validate([
+            'numero_orden' => 'required|unique:ordenes_compra_proveedor,numero_orden,' . $orden->id,
             'proveedor_id' => 'required|exists:proveedores,id',
             'fecha_orden' => 'required|date',
             'fecha_estimada_llegada' => 'nullable|date|after_or_equal:fecha_orden',
             'fecha_llegada_real' => 'nullable|date',
             'estado' => 'required|in:pendiente,en_fabricacion,en_transito,en_puerto,recibida,cancelada',
+            'modelo_maquina' => 'nullable|string|max:255',
+            'cantidad_maquinas' => 'nullable|integer|min:1|max:999',
+            'observaciones' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -242,28 +231,40 @@ class ImportacionController extends Controller
         try {
             $proveedor = Proveedor::find($request->proveedor_id);
             
+            $estadoAnterior = $orden->estado;
+            
             $orden->update([
+                'numero_orden' => $request->numero_orden,
                 'proveedor' => $proveedor->nombre,
                 'pais_origen' => $proveedor->pais,
                 'fecha_orden' => $request->fecha_orden,
                 'fecha_estimada_llegada' => $request->fecha_estimada_llegada,
                 'fecha_llegada_real' => $request->fecha_llegada_real,
                 'estado' => $request->estado,
+                'modelo_maquina' => $request->modelo_maquina,
+                'cantidad_maquinas' => $request->cantidad_maquinas,
                 'observaciones' => $request->observaciones,
             ]);
+
+            // Auto-crear máquinas cuando se marca como RECIBIDA
+            if ($request->estado === 'recibida' && $estadoAnterior !== 'recibida' && $orden->maquinas()->count() === 0) {
+                $this->crearMaquinasAutomaticamente($orden);
+            }
 
             DB::commit();
 
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Orden actualizada correctamente',
+                    'message' => 'Orden actualizada correctamente' . 
+                        ($request->estado === 'recibida' && $estadoAnterior !== 'recibida' ? ' y máquinas creadas' : ''),
                     'orden' => $orden
                 ]);
             }
 
             return redirect()->route('importaciones.show', $orden)
-                ->with('success', 'Orden actualizada correctamente');
+                ->with('success', 'Orden actualizada correctamente' . 
+                    ($request->estado === 'recibida' && $estadoAnterior !== 'recibida' ? ' y máquinas creadas' : ''));
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -280,8 +281,116 @@ class ImportacionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Crear máquinas automáticamente cuando la orden se marca como RECIBIDA
      */
+    private function crearMaquinasAutomaticamente(OrdenCompraProveedor $orden)
+    {
+        $cantidadTotal = $orden->cantidad_maquinas ?? 1;
+        $modeloNombre = $orden->modelo_maquina ?? 'Maquinaria General';
+        $marcaNombre = $orden->proveedor ?? 'Genérica';
+        
+        // Buscar o crear un modelo en maquinas_modelos
+        $modelo = MaquinaModelo::firstOrCreate(
+            ['modelo' => $modeloNombre],
+            [
+                'marca' => $marcaNombre,
+                'tipo_maquina' => 'Maquinaria',
+                'especificaciones' => 'Modelo creado automáticamente desde orden de compra',
+                'activo' => true
+            ]
+        );
+
+        for ($i = 0; $i < $cantidadTotal; $i++) {
+            $numeroSerie = $this->generarNumeroSerie($modeloNombre, $orden->id, $i);
+            
+            Maquina::create([
+                'modelo_id' => $modelo->id,
+                'numero_serie' => $numeroSerie,
+                'año_fabricacion' => now()->year,
+                'estado' => 'disponible',
+                'ubicacion_actual' => 'Bodega Central',
+                'precio_compra' => 0,
+                'precio_venta' => 0,
+                'fecha_ingreso' => now(),
+                'activo' => true,
+                'orden_compra_proveedor_id' => $orden->id,
+                'observaciones' => "Generada automáticamente desde orden {$orden->numero_orden}"
+            ]);
+        }
+        
+        Log::info("Máquinas creadas automáticamente para orden: {$orden->numero_orden}", [
+            'cantidad' => $cantidadTotal,
+            'modelo_id' => $modelo->id,
+            'modelo_nombre' => $modeloNombre,
+            'orden_id' => $orden->id
+        ]);
+    }
+
+    /**
+     * Crear máquinas manualmente desde el botón en el detalle de la orden
+     */
+    public function crearMaquinas(OrdenCompraProveedor $orden, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            if ($orden->maquinas()->count() > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Esta orden ya tiene máquinas asociadas'
+                ], 400);
+            }
+
+            $cantidadTotal = $orden->cantidad_maquinas ?? 1;
+            $modeloNombre = $orden->modelo_maquina ?? 'Maquinaria General';
+            $marcaNombre = $orden->proveedor ?? 'Genérica';
+
+            // Buscar o crear un modelo en maquinas_modelos
+            $modelo = MaquinaModelo::firstOrCreate(
+                ['modelo' => $modeloNombre],
+                [
+                    'marca' => $marcaNombre,
+                    'tipo_maquina' => 'Maquinaria',
+                    'especificaciones' => 'Modelo creado desde orden de compra',
+                    'activo' => true
+                ]
+            );
+
+            for ($i = 0; $i < $cantidadTotal; $i++) {
+                $numeroSerie = $this->generarNumeroSerie($modeloNombre, $orden->id, $i);
+                
+                Maquina::create([
+                    'modelo_id' => $modelo->id,
+                    'numero_serie' => $numeroSerie,
+                    'año_fabricacion' => now()->year,
+                    'estado' => 'disponible',
+                    'ubicacion_actual' => 'Bodega Central',
+                    'precio_compra' => 0,
+                    'precio_venta' => 0,
+                    'fecha_ingreso' => now(),
+                    'activo' => true,
+                    'orden_compra_proveedor_id' => $orden->id,
+                    'observaciones' => "Generada manualmente desde orden {$orden->numero_orden}"
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Se crearon {$cantidadTotal} máquina(s) correctamente",
+                'count' => $cantidadTotal
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function destroy(OrdenCompraProveedor $orden, Request $request)
     {
         try {
@@ -309,9 +418,17 @@ class ImportacionController extends Controller
         }
     }
 
-    /**
-     * Dashboard de importaciones
-     */
+    private function generarNumeroSerie($modelo, $ordenId, $indice = 0)
+    {
+        $prefijo = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $modelo), 0, 3));
+        if (empty($prefijo)) {
+            $prefijo = 'MAQ';
+        }
+        $fecha = now()->format('ymd');
+        $numero = str_pad($ordenId, 4, '0', STR_PAD_LEFT) . str_pad($indice, 2, '0', STR_PAD_LEFT);
+        return "{$prefijo}-{$fecha}-{$numero}";
+    }
+
     public function dashboard()
     {
         $usuario = Auth::user();
@@ -332,10 +449,10 @@ class ImportacionController extends Controller
             'monto_compras_mes' => DetalleOrdenCompra::whereHas('ordenCompra', function($q) {
                 $q->whereMonth('fecha_orden', now()->month)
                   ->whereYear('fecha_orden', now()->year);
-            })->sum(DB::raw('cantidad * precio_unitario')) ?: 1250000000
+            })->sum(DB::raw('cantidad * precio_unitario')) ?: 0
         ];
         
-        $ordenes_pendientes = OrdenCompraProveedor::with(['detalles.maquina.modelo'])
+        $ordenes_pendientes = OrdenCompraProveedor::with(['detalles.modelo'])
             ->whereIn('estado', ['pendiente', 'en_transito'])
             ->orderBy('fecha_estimada_llegada')
             ->take(5)
@@ -345,23 +462,26 @@ class ImportacionController extends Controller
                 $prioridad = $dias_restantes <= 7 ? 'alta' : ($dias_restantes <= 15 ? 'media' : 'baja');
                 
                 $primerDetalle = $orden->detalles->first();
-                $maquina = $primerDetalle && $primerDetalle->maquina && $primerDetalle->maquina->modelo 
-                    ? $primerDetalle->maquina->modelo->modelo 
-                    : 'Maquinaria';
+                $maquina = $primerDetalle && $primerDetalle->modelo 
+                    ? $primerDetalle->modelo->modelo 
+                    : ($orden->modelo_maquina ?? 'Maquinaria');
                 
                 return (object)[
-                    'id' => $orden->numero_orden,
+                    'id' => $orden->id,
+                    'numero_orden' => $orden->numero_orden,
                     'proveedor' => $orden->proveedor,
                     'pais' => $orden->pais_origen ?? 'N/A',
                     'maquina' => $maquina,
-                    'cantidad' => $orden->detalles->sum('cantidad') ?: 1,
+                    'cantidad' => $orden->detalles->sum('cantidad') ?: ($orden->cantidad_maquinas ?: 1),
                     'monto' => $orden->detalles->sum(DB::raw('cantidad * precio_unitario')) ?: 0,
                     'fecha_estimada' => $orden->fecha_estimada_llegada ?? now(),
-                    'prioridad' => $prioridad
+                    'prioridad' => $prioridad,
+                    'modelo_maquina' => $orden->modelo_maquina,
+                    'cantidad_maquinas' => $orden->cantidad_maquinas ?? 1,
                 ];
             });
         
-        $envios_transito = OrdenCompraProveedor::with(['detalles.maquina.modelo'])
+        $envios_transito = OrdenCompraProveedor::with(['detalles.modelo'])
             ->where('estado', 'en_transito')
             ->whereNotNull('fecha_estimada_llegada')
             ->take(4)
@@ -376,9 +496,9 @@ class ImportacionController extends Controller
                 $estado = $progreso > 80 ? 'cercano' : ($progreso > 30 ? 'en_navegacion' : 'en_aduana_origen');
                 
                 $primerDetalle = $orden->detalles->first();
-                $maquina = $primerDetalle && $primerDetalle->maquina && $primerDetalle->maquina->modelo 
-                    ? $primerDetalle->maquina->modelo->marca . ' ' . $primerDetalle->maquina->modelo->modelo
-                    : 'Maquinaria';
+                $maquina = $primerDetalle && $primerDetalle->modelo 
+                    ? $primerDetalle->modelo->marca . ' ' . $primerDetalle->modelo->modelo
+                    : ($orden->modelo_maquina ?? 'Maquinaria');
                 
                 return (object)[
                     'contenedor' => 'CONT-' . str_pad($orden->id, 6, '0', STR_PAD_LEFT),
@@ -393,7 +513,7 @@ class ImportacionController extends Controller
                 ];
             });
         
-        $proximas_llegadas = OrdenCompraProveedor::with(['detalles.maquina.modelo'])
+        $proximas_llegadas = OrdenCompraProveedor::with(['detalles.modelo'])
             ->where('estado', 'en_transito')
             ->whereNotNull('fecha_estimada_llegada')
             ->where('fecha_estimada_llegada', '>=', now())
@@ -406,9 +526,9 @@ class ImportacionController extends Controller
                           ($dias_restantes <= 5 ? 'en_transito' : 'documentacion');
                 
                 $primerDetalle = $orden->detalles->first();
-                $maquina = $primerDetalle && $primerDetalle->maquina && $primerDetalle->maquina->modelo 
-                    ? $primerDetalle->maquina->modelo->marca . ' ' . $primerDetalle->maquina->modelo->modelo
-                    : 'Maquinaria';
+                $maquina = $primerDetalle && $primerDetalle->modelo 
+                    ? $primerDetalle->modelo->marca . ' ' . $primerDetalle->modelo->modelo
+                    : ($orden->modelo_maquina ?? 'Maquinaria');
                 
                 return (object)[
                     'contenedor' => 'CONT-' . str_pad($orden->id, 6, '0', STR_PAD_LEFT),
@@ -460,18 +580,6 @@ class ImportacionController extends Controller
             ]
         ]);
         
-        if ($envios_transito->isEmpty()) {
-            $envios_transito = collect([]);
-        }
-        
-        if ($proximas_llegadas->isEmpty()) {
-            $proximas_llegadas = collect([]);
-        }
-        
-        if ($proveedores->isEmpty()) {
-            $proveedores = collect([]);
-        }
-        
         return view('dashboardimportaciones', compact(
             'usuario',
             'stats',
@@ -481,6 +589,230 @@ class ImportacionController extends Controller
             'proveedores',
             'documentos_pendientes'
         ));
+    }
+
+    // ==================== MÉTODOS PARA MAQUINARIA DISPONIBLE ====================
+
+    /**
+     * Obtener máquinas disponibles para el dashboard
+     */
+    public function maquinariaDisponible(Request $request)
+    {
+        try {
+            $query = Maquina::with(['modelo', 'ordenCompra'])
+                ->where('activo', true);
+            
+            // Aplicar filtros
+            if ($request->filled('buscar')) {
+                $query->where(function($q) use ($request) {
+                    $q->where('numero_serie', 'like', '%' . $request->buscar . '%')
+                      ->orWhereHas('modelo', function($q2) use ($request) {
+                          $q2->where('marca', 'like', '%' . $request->buscar . '%')
+                             ->orWhere('modelo', 'like', '%' . $request->buscar . '%');
+                      });
+                });
+            }
+            
+            if ($request->filled('marca')) {
+                $query->whereHas('modelo', function($q) use ($request) {
+                    $q->where('marca', $request->marca);
+                });
+            }
+            
+            if ($request->filled('precio_min')) {
+                $query->where('precio_venta', '>=', $request->precio_min);
+            }
+            
+            if ($request->filled('precio_max')) {
+                $query->where('precio_venta', '<=', $request->precio_max);
+            }
+            
+            $maquinas = $query->orderBy('created_at', 'desc')->paginate(10);
+            
+            // Si la solicitud es AJAX y no es para marcas
+            if ($request->ajax() && !$request->has('marcas')) {
+                $html = view('importaciones.maquinaria-lista', compact('maquinas'))->render();
+                return response()->json([
+                    'success' => true,
+                    'html' => $html
+                ]);
+            }
+            
+            // Si la solicitud es para obtener marcas
+            if ($request->has('marcas')) {
+                $marcas = MaquinaModelo::where('activo', true)
+                    ->distinct()
+                    ->pluck('marca')
+                    ->filter()
+                    ->values();
+                
+                return response()->json([
+                    'success' => true,
+                    'marcas' => $marcas
+                ]);
+            }
+            
+            // Para solicitudes normales, devolver vista completa
+            return view('importaciones.maquinaria-lista', compact('maquinas'));
+            
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error: ' . $e->getMessage()
+                ], 500);
+            }
+            return back()->with('error', 'Error al cargar máquinas: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Obtener estadísticas de maquinaria
+     */
+    public function maquinariaEstadisticas()
+    {
+        try {
+            $estadisticas = [
+                'disponibles' => Maquina::where('estado', 'disponible')->where('activo', true)->count(),
+                'en_camino' => Maquina::whereIn('estado', ['en_transito', 'en_puerto', 'fabricacion'])->count(),
+                'reservadas' => Maquina::where('estado', 'pendiente_despacho')->count(),
+                'vendidas' => Maquina::where('estado', 'vendida')->count(),
+            ];
+            
+            return response()->json($estadisticas);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'disponibles' => 0,
+                'en_camino' => 0,
+                'reservadas' => 0,
+                'vendidas' => 0
+            ]);
+        }
+    }
+
+    /**
+     * Cambiar estado de una máquina
+     */
+    public function cambiarEstadoMaquina($id, Request $request)
+    {
+        try {
+            $maquina = Maquina::findOrFail($id);
+            $maquina->estado = $request->estado;
+            
+            if ($request->estado == 'vendida') {
+                $maquina->fecha_venta = now();
+            }
+            
+            $maquina->save();
+            
+            // Registrar seguimiento
+            if ($maquina->seguimientosEstado) {
+                $maquina->seguimientosEstado()->create([
+                    'estado_anterior' => $maquina->getOriginal('estado'),
+                    'estado_nuevo' => $request->estado,
+                    'fecha_cambio' => now(),
+                    'usuario_cambio' => Auth::id(),
+                    'observaciones' => 'Cambio desde dashboard'
+                ]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Estado actualizado correctamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Reservar máquina
+     */
+    public function reservarMaquina($id, Request $request)
+    {
+        try {
+            $maquina = Maquina::findOrFail($id);
+            
+            if ($maquina->estado != 'disponible') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La máquina no está disponible para reserva'
+                ], 400);
+            }
+            
+            $estadoAnterior = $maquina->estado;
+            $maquina->estado = 'pendiente_despacho';
+            $maquina->save();
+            
+            if ($maquina->seguimientosEstado) {
+                $maquina->seguimientosEstado()->create([
+                    'estado_anterior' => $estadoAnterior,
+                    'estado_nuevo' => 'pendiente_despacho',
+                    'fecha_cambio' => now(),
+                    'usuario_cambio' => Auth::id(),
+                    'observaciones' => 'Reserva desde dashboard'
+                ]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Máquina reservada correctamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Vender máquina
+     */
+    public function venderMaquina($id, Request $request)
+    {
+        try {
+            $maquina = Maquina::findOrFail($id);
+            
+            if ($maquina->estado == 'vendida') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La máquina ya está vendida'
+                ], 400);
+            }
+            
+            $estadoAnterior = $maquina->estado;
+            $maquina->estado = 'vendida';
+            $maquina->fecha_venta = now();
+            $maquina->save();
+            
+            if ($maquina->seguimientosEstado) {
+                $maquina->seguimientosEstado()->create([
+                    'estado_anterior' => $estadoAnterior,
+                    'estado_nuevo' => 'vendida',
+                    'fecha_cambio' => now(),
+                    'usuario_cambio' => Auth::id(),
+                    'observaciones' => 'Venta desde dashboard'
+                ]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Máquina marcada como vendida'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     private function getPuertoFromPais($pais)

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GALGA · Lista de Órdenes</title>
     
-    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -165,7 +164,11 @@
                 <th>ID</th>
                 <th>N° Orden</th>
                 <th>Proveedor</th>
-                <th>Fecha</th>
+                <th>País</th>
+                <th>Modelo</th>
+                <th>Cant.</th>
+                <th>Fecha Orden</th>
+                <th>Fecha Llegada</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -176,7 +179,17 @@
                 <td>#{{ $orden->id }}</td>
                 <td><strong>{{ $orden->numero_orden }}</strong></td>
                 <td>{{ $orden->proveedor }}</td>
+                <td>{{ $orden->pais_origen ?? 'N/A' }}</td>
+                <td>{{ $orden->modelo_maquina ?? 'N/A' }}</td>
+                <td>{{ $orden->cantidad_maquinas ?? 1 }}</td>
                 <td>{{ $orden->fecha_orden->format('d/m/Y') }}</td>
+                <td>
+                    @if($orden->fecha_estimada_llegada)
+                        {{ $orden->fecha_estimada_llegada->format('d/m/Y') }}
+                    @else
+                        N/A
+                    @endif
+                </td>
                 <td>
                     @php
                         $estadoColors = [
@@ -202,16 +215,16 @@
                 </td>
                 <td>
                     <a href="{{ route('importaciones.show', $orden->id) }}" class="btn-sm">
-                        <i class="fas fa-eye"></i> Ver
+                        <i class="fas fa-eye"></i>
                     </a>
                     <a href="{{ route('importaciones.edit', $orden->id) }}" class="btn-sm">
-                        <i class="fas fa-edit"></i> Editar
+                        <i class="fas fa-edit"></i>
                     </a>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" style="text-align: center; padding: 40px;">
+                <td colspan="10" style="text-align: center; padding: 40px;">
                     <p>No hay órdenes registradas</p>
                 </td>
             </tr>

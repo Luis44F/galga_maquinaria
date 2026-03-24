@@ -95,7 +95,6 @@ class MaquinaController extends Controller
             'precio_compra', 'precio_venta', 'fecha_ingreso', 'observaciones'
         ]));
 
-        // Registrar el seguimiento de estado inicial
         $maquina->seguimientosEstado()->create([
             'estado_nuevo' => $request->estado,
             'fecha_cambio' => now(),
@@ -112,8 +111,12 @@ class MaquinaController extends Controller
      */
     public function show(Maquina $maquina)
     {
-        $maquina->load(['modelo.categoria', 'seguimientosEstado.usuario']);
-        return view('importaciones.maquinas.show', compact('maquina'));
+        // ✅ CARGA CORREGIDA: Solo modelo, sin carga profunda de categoría para mayor estabilidad
+        $maquina->load(['modelo', 'ordenCompra', 'seguimientosEstado.usuario']);
+        
+        $usuario = Auth::user();
+
+        return view('importaciones.maquinas.show', compact('maquina', 'usuario'));
     }
 
     /**
