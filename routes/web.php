@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImportacionController;
 use App\Http\Controllers\MaquinariaDisponibleController;
 use App\Http\Controllers\MaquinaController;
+use App\Http\Controllers\ProveedorController;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -124,20 +125,25 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard-despachos', [UserController::class, 'dashboardDespachos'])->name('dashboard.despachos');
     Route::get('/dashboard-facturacion', [UserController::class, 'dashboardFacturacion'])->name('dashboard.facturacion');
     
+    // ==================== GESTIÓN DE PROVEEDORES ====================
+    Route::resource('proveedores', ProveedorController::class);
+    Route::post('/proveedores/{proveedore}/toggle-activo', [ProveedorController::class, 'toggleActivo'])->name('proveedores.toggle-activo');
+
     // ==================== CRUD DE MÁQUINAS ====================
     Route::resource('maquinas', MaquinaController::class);
     
-    // ==================== CRUD DE IMPORTACIONES Y MAQUINARIA ====================
+    // ==================== RUTAS PARA MAQUINARIA DISPONIBLE (FUERA DEL GRUPO IMPORTACIONES) ====================
+    Route::prefix('maquinaria-disponible')->name('maquinaria-disponible.')->group(function () {
+        Route::get('/', [MaquinariaDisponibleController::class, 'index'])->name('index');
+        Route::get('/estadisticas', [MaquinariaDisponibleController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/marcas', [MaquinariaDisponibleController::class, 'getMarcas'])->name('marcas');
+        Route::post('/{id}/cambiar-estado', [MaquinariaDisponibleController::class, 'cambiarEstado'])->name('cambiar-estado');
+        Route::post('/{id}/reservar', [MaquinariaDisponibleController::class, 'reservar'])->name('reservar');
+        Route::post('/{id}/vender', [MaquinariaDisponibleController::class, 'vender'])->name('vender');
+    });
+    
+    // ==================== CRUD DE IMPORTACIONES ====================
     Route::prefix('importaciones')->name('importaciones.')->group(function () {
-        
-        // ==================== MAQUINARIA DISPONIBLE ====================
-        // ✅ CORREGIDO: Nombres de rutas que coinciden con el JavaScript del dashboard
-        Route::get('/maquinaria-disponible', [MaquinariaDisponibleController::class, 'index'])->name('maquinaria-disponible');
-        Route::get('/maquinaria-disponible/estadisticas', [MaquinariaDisponibleController::class, 'estadisticas'])->name('maquinaria-disponible.estadisticas');
-        Route::get('/maquinaria-disponible/marcas', [MaquinariaDisponibleController::class, 'getMarcas'])->name('maquinaria-disponible.marcas');
-        Route::post('/maquinaria-disponible/cambiar-estado/{id}', [MaquinariaDisponibleController::class, 'cambiarEstado'])->name('maquinaria-disponible.cambiar-estado');
-        Route::post('/maquinaria-disponible/reservar/{id}', [MaquinariaDisponibleController::class, 'reservar'])->name('maquinaria-disponible.reservar');
-        Route::post('/maquinaria-disponible/vender/{id}', [MaquinariaDisponibleController::class, 'vender'])->name('maquinaria-disponible.vender');
         
         // ==================== CRUD DE IMPORTACIONES ====================
         Route::get('/', [ImportacionController::class, 'index'])->name('index');
@@ -162,5 +168,5 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/perfil', [UserController::class, 'actualizarPerfil'])->name('perfil.actualizar');
     
     // ==================== RUTA DE PRUEBA PARA MAQUINARIA DISPONIBLE ====================
-    Route::get('/maquinaria-disponible-test', [MaquinariaDisponibleController::class, 'index'])->name('maquinaria-disponible.test');
+    Route::get('/maquinaria-disponible-test', [MaquinariaDisponibleController::class, 'test'])->name('maquinaria-disponible.test');
 });

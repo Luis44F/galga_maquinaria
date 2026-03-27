@@ -168,7 +168,7 @@ class ImportacionController extends Controller
     public function show(OrdenCompraProveedor $orden, Request $request)
     {
         $usuario = Auth::user();
-        $orden->load(['creador', 'detalles.modelo', 'maquinas.modelo']);
+        $orden->load(['creador', 'detalles.modelo', 'maquinas.modelo', 'maquinas.ordenCompra']);
         
         if ($request->ajax()) {
             try {
@@ -627,11 +627,75 @@ class ImportacionController extends Controller
                 $query->where('precio_venta', '<=', $request->precio_max);
             }
             
-            $maquinas = $query->orderBy('created_at', 'desc')->paginate(10);
+            $maquinas = $query->orderBy('created_at', 'desc')->paginate(15);
             
             // Si la solicitud es AJAX y no es para marcas
             if ($request->ajax() && !$request->has('marcas')) {
-                $html = view('importaciones.maquinaria-lista', compact('maquinas'))->render();
+                // Construir el HTML manualmente
+                $html = '';
+                
+                if ($maquinas->isEmpty()) {
+                    $html = '<tr><td colspan="8" class="text-center">No hay máquinas registradas</td></tr>';
+                } else {
+                    foreach ($maquinas as $maquina) {
+                        $modeloData = $maquina->modelo;
+                        $ordenData = $maquina->ordenCompra;
+                        
+                        // Obtener nombre de la máquina y marca
+                        $nombreMaquina = $modeloData ? ($modeloData->modelo ?: 'Sin modelo') : 'Sin modelo';
+                        $marcaMaquina = $modeloData ? ($modeloData->marca ?: 'N/A') : 'N/A';
+                        $modeloCompleto = $marcaMaquina . ' ' . $nombreMaquina;
+                        
+                        // Obtener datos de la orden
+                        $numeroOrden = $ordenData ? ($ordenData->numero_orden ?? 'N/A') : 'N/A';
+                        $cantidadOrden = $ordenData ? ($ordenData->cantidad_maquinas ?? 1) : 1;
+                        
+                        // Determinar clase del badge según estado
+                        $estadoClass = match($maquina->estado) {
+                            'disponible' => 'badge-success',
+                            'vendida' => 'badge-danger',
+                            'en_transito' => 'badge-warning',
+                            'pendiente_despacho' => 'badge-info',
+                            default => 'badge-secondary'
+                        };
+                        
+                        $estadoIcono = match($maquina->estado) {
+                            'disponible' => '📦',
+                            'vendida' => '💰',
+                            'en_transito' => '🚢',
+                            'pendiente_despacho' => '⏳',
+                            default => '📌'
+                        };
+                        
+                        $estadoTexto = match($maquina->estado) {
+                            'disponible' => 'Disponible',
+                            'vendida' => 'Vendida',
+                            'en_transito' => 'En Tránsito',
+                            'pendiente_despacho' => 'Pendiente Despacho',
+                            default => ucfirst(str_replace('_', ' ', $maquina->estado))
+                        };
+                        
+                        $html .= '<tr>';
+                        $html .= '<td><strong>' . $maquina->id . '</strong><br><small>Orden: ' . e($numeroOrden) . '<br>(' . $cantidadOrden . ' máquinas)</small></td>';
+                        $html .= '<td><strong>' . e($nombreMaquina) . '</strong><br><small>Serie: ' . e($maquina->numero_serie ?? 'N/A') . '</small></td>';
+                        $html .= '<td>' . e($modeloCompleto) . '</td>';
+                        $html .= '<td>' . ($maquina->año_fabricacion ?? 'N/A') . '</td>';
+                        $html .= '<td>' . e($maquina->numero_serie ?? 'N/A') . '</td>';
+                        $html .= '<td>$' . number_format($maquina->precio_venta ?? 0, 0, ',', '.') . '</td>';
+                        $html .= '<td><span class="badge ' . $estadoClass . '">' . $estadoIcono . ' ' . $estadoTexto . '</span></td>';
+                        $html .= '<td>';
+                        $html .= '<button class="btn-sm" onclick="verMaquina(' . $maquina->id . ')"><i class="fas fa-eye"></i></button> ';
+                        if ($maquina->estado !== 'vendida') {
+                            $html .= '<button class="btn-sm" onclick="reservarMaquina(' . $maquina->id . ')"><i class="fas fa-bookmark"></i></button> ';
+                            $html .= '<button class="btn-sm" onclick="venderMaquina(' . $maquina->id . ')"><i class="fas fa-dollar-sign"></i></button> ';
+                        }
+                        $html .= '<button class="btn-sm" onclick="abrirModalEstado(' . $maquina->id . ', \'' . $maquina->estado . '\')"><i class="fas fa-exchange-alt"></i></button> ';
+                        $html .= '<button class="btn-sm" onclick="eliminarMaquina(' . $maquina->id . ')"><i class="fas fa-trash"></i></button>';
+                        $html .= '</td>';
+                        $html .= '</tr>';
+                    }
+                }
+                
                 return response()->json([
                     'success' => true,
                     'html' => $html
@@ -641,6 +705,7 @@ class ImportacionController extends Controller
             // Si la solicitud es para obtener marcas
             if ($request->has('marcas')) {
                 $marcas = MaquinaModelo::where('activo', true)
+                    ->whereNotNull('marca')
                     ->distinct()
                     ->pluck('marca')
                     ->filter()
@@ -674,7 +739,7 @@ class ImportacionController extends Controller
         try {
             $estadisticas = [
                 'disponibles' => Maquina::where('estado', 'disponible')->where('activo', true)->count(),
-                'en_camino' => Maquina::whereIn('estado', ['en_transito', 'en_puerto', 'fabricacion'])->count(),
+                'en_camino' => Maquina::whereIn('estado', ['en_transito', 'en_puerto', 'fabricacion', 'en_bodega'])->count(),
                 'reservadas' => Maquina::where('estado', 'pendiente_despacho')->count(),
                 'vendidas' => Maquina::where('estado', 'vendida')->count(),
             ];
@@ -706,17 +771,6 @@ class ImportacionController extends Controller
             
             $maquina->save();
             
-            // Registrar seguimiento
-            if ($maquina->seguimientosEstado) {
-                $maquina->seguimientosEstado()->create([
-                    'estado_anterior' => $maquina->getOriginal('estado'),
-                    'estado_nuevo' => $request->estado,
-                    'fecha_cambio' => now(),
-                    'usuario_cambio' => Auth::id(),
-                    'observaciones' => 'Cambio desde dashboard'
-                ]);
-            }
-            
             return response()->json([
                 'success' => true,
                 'message' => 'Estado actualizado correctamente'
@@ -745,19 +799,8 @@ class ImportacionController extends Controller
                 ], 400);
             }
             
-            $estadoAnterior = $maquina->estado;
             $maquina->estado = 'pendiente_despacho';
             $maquina->save();
-            
-            if ($maquina->seguimientosEstado) {
-                $maquina->seguimientosEstado()->create([
-                    'estado_anterior' => $estadoAnterior,
-                    'estado_nuevo' => 'pendiente_despacho',
-                    'fecha_cambio' => now(),
-                    'usuario_cambio' => Auth::id(),
-                    'observaciones' => 'Reserva desde dashboard'
-                ]);
-            }
             
             return response()->json([
                 'success' => true,
@@ -787,20 +830,9 @@ class ImportacionController extends Controller
                 ], 400);
             }
             
-            $estadoAnterior = $maquina->estado;
             $maquina->estado = 'vendida';
             $maquina->fecha_venta = now();
             $maquina->save();
-            
-            if ($maquina->seguimientosEstado) {
-                $maquina->seguimientosEstado()->create([
-                    'estado_anterior' => $estadoAnterior,
-                    'estado_nuevo' => 'vendida',
-                    'fecha_cambio' => now(),
-                    'usuario_cambio' => Auth::id(),
-                    'observaciones' => 'Venta desde dashboard'
-                ]);
-            }
             
             return response()->json([
                 'success' => true,

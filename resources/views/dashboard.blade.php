@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        /* Tus estilos existentes se mantienen IGUAL */
         * {
             margin: 0;
             padding: 0;
@@ -791,32 +790,8 @@
                 </div>
             </div>
 
-            <!-- Navigation -->
+            <!-- Navigation - SOLO GESTIÓN DE USUARIOS -->
             <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-ship"></i>
-                        <span>Compras e Importaciones</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-warehouse"></i>
-                        <span>Inventario</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        <span>Ventas y Facturación</span>
-                    </a>
-                </li>
                 <li class="nav-item">
                     <a href="{{ route('usuarios.index') }}" class="nav-link active">
                         <i class="fas fa-users-cog"></i>
@@ -913,7 +888,7 @@
 
             <!-- Admin Grid -->
             <div class="admin-grid">
-                <!-- Crear Nuevo Perfil - MODIFICADO -->
+                <!-- Crear Nuevo Perfil -->
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-user-plus"></i> Crear Nuevo Perfil</h3>
@@ -935,7 +910,6 @@
                         </div>
                     @endif
 
-                    <!-- ✅ FORMULARIO CORREGIDO - CONECTADO A LARAVEL -->
                     <form method="POST" action="{{ route('usuarios.store') }}" class="create-profile-form">
                         @csrf
                         <div class="form-row">
@@ -1062,7 +1036,7 @@
                 </div>
             </div>
 
-            <!-- Lista de Usuarios - MODIFICADA CON DATOS REALES -->
+            <!-- Lista de Usuarios -->
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fas fa-list"></i> Usuarios del Sistema</h3>
@@ -1084,7 +1058,7 @@
                 <div class="table-responsive">
                     <table class="users-table">
                         <thead>
-                            <tr>
+                            汽
                                 <th>Usuario</th>
                                 <th>Email</th>
                                 <th>Rol</th>
@@ -1092,11 +1066,10 @@
                                 <th>Estado</th>
                                 <th>Último acceso</th>
                                 <th>Acciones</th>
-                            </tr>
-                        </thead>
+                            </thead>
                         <tbody>
                             @forelse($users ?? [] as $user)
-                            <tr>
+                            汽
                                 <td>
                                     <div class="user-cell">
                                         <div class="user-avatar-small">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
@@ -1108,9 +1081,7 @@
                                         </div>
                                     </div>
                                 </td>
-
                                 <td>{{ $user->email }}</td>
-
                                 <td>
                                     @php
                                         $rolClass = match($user->rol) {
@@ -1127,16 +1098,12 @@
                                         {{ ucfirst($user->rol) }}
                                     </span>
                                 </td>
-
                                 <td>{{ $user->departamento ?? 'No asignado' }}</td>
-
                                 <td>
                                     <span class="status-badge {{ $user->activo ? 'status-active' : 'status-inactive' }}"></span>
                                     {{ $user->activo ? 'Activo' : 'Inactivo' }}
                                 </td>
-
                                 <td>{{ $user->ultimo_acceso ? \Carbon\Carbon::parse($user->ultimo_acceso)->diffForHumans() : '—' }}</td>
-
                                 <td>
                                     <form method="POST" action="{{ route('usuarios.destroy', $user) }}" onsubmit="return confirm('¿Estás seguro de eliminar a {{ $user->name }}?')">
                                         @csrf
@@ -1148,7 +1115,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr>
+                            汽
                                 <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-dim);">
                                     <i class="fas fa-users" style="font-size: 48px; margin-bottom: 1rem; display: block;"></i>
                                     No hay usuarios registrados
@@ -1162,17 +1129,11 @@
         </main>
     </div>
 
-    <!-- ELIMINADO: Modal de confirmación (ahora usamos confirm nativo) -->
-
     <script>
         // Toggle sidebar en móvil
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
         }
-
-        // ✅ ELIMINADAS TODAS LAS FUNCIONES FALSAS:
-        // createProfile(), addUserToTable(), editUser(), confirmDelete(), closeModal(), deleteUser()
-        // Ahora Laravel maneja todo
     </script>
 </body>
 </html>

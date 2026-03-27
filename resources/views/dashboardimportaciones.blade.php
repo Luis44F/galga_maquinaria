@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <style>
-        /* ... (todo tu CSS existente, sin cambios) ... */
+        /* ========== ESTILOS COMPLETOS ========== */
         * {
             margin: 0;
             padding: 0;
@@ -51,7 +51,7 @@
             position: relative;
         }
 
-        /* Sidebar - Adaptable */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--sidebar-bg);
@@ -99,7 +99,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Sidebar User Section */
         .sidebar-user {
             padding: 16px 12px;
             background: rgba(14, 165, 233, 0.1);
@@ -160,11 +159,6 @@
             color: #0a0f1c;
         }
 
-        .nav-item.active {
-            font-weight: 600;
-        }
-
-        /* Botón menú móvil */
         .mobile-menu-btn {
             display: none;
             position: fixed;
@@ -178,10 +172,8 @@
             padding: 10px 15px;
             cursor: pointer;
             font-size: 20px;
-            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
         }
 
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -240,17 +232,11 @@
             background: none;
             border: none;
             color: var(--text-light);
-            font-family: 'Inter', sans-serif;
             width: 100%;
             outline: none;
-            min-width: 0;
         }
 
-        .search-box input::placeholder {
-            color: var(--text-dim);
-        }
-
-        .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-info, .btn-outline-secondary {
+        .btn-primary, .btn-success, .btn-outline-secondary {
             padding: 10px 20px;
             border-radius: 10px;
             font-weight: 600;
@@ -273,7 +259,6 @@
         .btn-primary:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.5);
         }
 
         .btn-success {
@@ -283,36 +268,6 @@
 
         .btn-success:hover {
             background: #0d9668;
-            transform: translateY(-2px);
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: #0a0f1c;
-        }
-
-        .btn-warning:hover {
-            background: #e68a00;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        .btn-info {
-            background: var(--info);
-            color: white;
-        }
-
-        .btn-info:hover {
-            background: #2563eb;
             transform: translateY(-2px);
         }
 
@@ -327,7 +282,7 @@
             color: var(--text-light);
         }
 
-        /* Stats Cards - Adaptables */
+        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -346,7 +301,6 @@
         .stat-card:hover {
             transform: translateY(-4px);
             border-color: var(--primary);
-            box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.3);
         }
 
         .stat-header {
@@ -372,24 +326,19 @@
             color: var(--warning);
         }
 
-        .stat-icon.success {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-        }
-
         .stat-icon.info {
             background: rgba(14, 165, 233, 0.2);
             color: var(--primary);
         }
 
+        .stat-icon.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
         .stat-icon.primary {
             background: rgba(59, 130, 246, 0.2);
             color: var(--info);
-        }
-
-        .stat-icon.danger {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
         }
 
         .stat-label {
@@ -404,31 +353,7 @@
             margin-bottom: 4px;
         }
 
-        .stat-trend {
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-
-        .text-warning {
-            color: var(--warning);
-        }
-
-        .text-success {
-            color: var(--success);
-        }
-
-        .text-info {
-            color: var(--info);
-        }
-
-        .text-danger {
-            color: var(--danger);
-        }
-
-        /* Two Column Layout - Adaptable */
+        /* Two Column Layout */
         .two-column-grid {
             display: grid;
             grid-template-columns: 1.5fr 1fr;
@@ -462,10 +387,6 @@
             gap: 8px;
         }
 
-        .card-title i {
-            color: var(--primary);
-        }
-
         .badge {
             padding: 4px 10px;
             border-radius: 30px;
@@ -493,15 +414,9 @@
             color: var(--danger);
         }
 
-        .badge-primary {
-            background: rgba(59, 130, 246, 0.2);
-            color: var(--info);
-        }
-
-        /* Tables - Adaptables */
+        /* Tables */
         .table-responsive {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
             margin: 0 -24px;
             padding: 0 24px;
         }
@@ -520,7 +435,6 @@
             font-weight: 500;
             font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         td {
@@ -552,14 +466,6 @@
             border-radius: 3px;
         }
 
-        .progress-fill.warning {
-            background: var(--warning);
-        }
-
-        .progress-fill.success {
-            background: var(--success);
-        }
-
         /* Status Indicators */
         .status-indicator {
             display: inline-block;
@@ -581,12 +487,7 @@
             background: var(--success);
         }
 
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
+        /* Buttons */
         .btn-sm {
             padding: 6px 12px;
             border-radius: 8px;
@@ -608,7 +509,7 @@
             border-color: var(--primary);
         }
 
-        /* Shipment Cards - Adaptables */
+        /* Shipment Cards */
         .shipment-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -637,19 +538,7 @@
             word-break: break-word;
         }
 
-        .shipment-route {
-            font-size: 13px;
-            color: var(--text-dim);
-            margin-bottom: 8px;
-            word-break: break-word;
-        }
-
-        .shipment-dates {
-            font-size: 12px;
-            color: var(--text-dim);
-        }
-
-        /* Alertas */
+        /* Alerts */
         .alert {
             padding: 12px 16px;
             border-radius: 12px;
@@ -670,11 +559,6 @@
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid var(--danger);
             color: var(--danger);
-        }
-
-        .alert i {
-            font-size: 18px;
-            flex-shrink: 0;
         }
 
         /* Modal */
@@ -700,14 +584,12 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 24px;
-            padding: clamp(20px, 5vw, 32px);
+            padding: 24px;
             max-width: 500px;
             width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
-        /* Formularios */
+        /* Forms */
         .form-group {
             margin-bottom: 16px;
         }
@@ -727,15 +609,12 @@
             border: 1px solid var(--card-border);
             border-radius: 12px;
             color: var(--text-light);
-            font-family: 'Inter', sans-serif;
             font-size: 14px;
-            transition: all 0.3s;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
         }
 
         select.form-control {
@@ -760,12 +639,6 @@
             border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 20px;
-            transition: all 0.3s;
-        }
-
-        .maquinaria-stat-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
         }
 
         .maquinaria-stat-header {
@@ -773,8 +646,6 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .maquinaria-stat-icon {
@@ -785,11 +656,10 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            flex-shrink: 0;
         }
 
         .maquinaria-stat-value {
-            font-size: clamp(24px, 5vw, 28px);
+            font-size: 28px;
             font-weight: 700;
             color: var(--text-light);
         }
@@ -808,17 +678,37 @@
             gap: 16px;
         }
 
-        /* Responsive Design */
+        /* Toggle de grupos */
+        .toggle-grupo {
+            display: none;
+        }
+
+        .grupo-fila {
+            display: none;
+        }
+
+        .grupo-header {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .grupo-header:hover {
+            background: rgba(14, 165, 233, 0.1) !important;
+        }
+
+        .icono {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        /* Responsive */
         @media (max-width: 1200px) {
-            .stats-grid,
-            .maquinaria-stats-grid {
+            .stats-grid, .maquinaria-stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
             .two-column-grid {
                 grid-template-columns: 1fr;
             }
-            
             .shipment-grid {
                 grid-template-columns: 1fr;
             }
@@ -828,20 +718,16 @@
             .main-content {
                 padding: 20px;
             }
-            
             .content-header {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
             .header-actions {
                 justify-content: stretch;
             }
-            
             .search-box {
                 width: 100%;
             }
-            
             .btn-primary, .btn-success {
                 width: 100%;
                 justify-content: center;
@@ -852,42 +738,19 @@
             .mobile-menu-btn {
                 display: block;
             }
-            
             .sidebar {
                 transform: translateX(-100%);
             }
-            
             .sidebar.active {
                 transform: translateX(0);
             }
-            
             .main-content {
                 margin-left: 0;
                 width: 100%;
                 padding-top: 80px;
             }
-            
-            .stats-grid,
-            .maquinaria-stats-grid {
+            .stats-grid, .maquinaria-stats-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .header-title h1 {
-                font-size: 24px;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .shipment-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .modal-content {
-                padding: 20px;
             }
         }
 
@@ -895,17 +758,9 @@
             .main-content {
                 padding: 16px;
             }
-            
-            .stat-card,
-            .maquinaria-stat-card,
-            .card {
+            .stat-card, .maquinaria-stat-card, .card {
                 padding: 16px;
             }
-            
-            .btn-sm {
-                padding: 8px 10px;
-            }
-            
             .filtros-grid {
                 grid-template-columns: 1fr;
             }
@@ -913,97 +768,63 @@
     </style>
 </head>
 <body>
-    <!-- Botón menú móvil -->
     <button class="mobile-menu-btn" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
 
     <div class="app-wrapper">
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
-                <div class="logo-icon">
-                    <i class="fas fa-cog"></i>
-                </div>
+                <div class="logo-icon"><i class="fas fa-cog"></i></div>
                 <span class="logo-text">GALGA</span>
             </div>
 
-            <!-- Sidebar User Section con datos del usuario real -->
             <div class="sidebar-user">
                 <div class="user-name">{{ $usuario->name }}</div>
                 <span class="user-role">
                     @switch($usuario->rol)
-                        @case('admin')
-                            Administrador
-                            @break
-                        @case('vendedor')
-                            Vendedor
-                            @break
-                        @case('cartera')
-                            Cartera
-                            @break
-                        @case('importaciones')
-                            Importaciones
-                            @break
-                        @case('despachos')
-                            Despachos
-                            @break
-                        @case('facturacion')
-                            Facturación
-                            @break
-                        @default
-                            {{ ucfirst($usuario->rol) }}
+                        @case('admin') Administrador @break
+                        @case('vendedor') Vendedor @break
+                        @case('cartera') Cartera @break
+                        @case('importaciones') Importaciones @break
+                        @case('despachos') Despachos @break
+                        @case('facturacion') Facturación @break
+                        @default {{ ucfirst($usuario->rol) }}
                     @endswitch
                 </span>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="{{ route('dashboard.importaciones') }}" class="nav-item active">
-                    <i class="fas fa-ship"></i>
-                    <span>Dashboard</span>
+                <a href="#" class="nav-item active" onclick="mostrarDashboard(); return false;">
+                    <i class="fas fa-ship"></i> <span>Dashboard</span>
                 </a>
-                <a href="#" class="nav-item" onclick="mostrarListaOrdenes()">
-                    <i class="fas fa-file-invoice"></i>
-                    <span>Órdenes de Compra</span>
+                <a href="#" class="nav-item" onclick="mostrarListaOrdenes(); return false;">
+                    <i class="fas fa-file-invoice"></i> <span>Órdenes de Compra</span>
                 </a>
-                <a href="#" class="nav-item" onclick="mostrarMaquinariaDisponible()">
-                    <i class="fas fa-cog"></i>
-                    <span>MAQUINARIA DISPONIBLE</span>
+                <a href="#" class="nav-item" onclick="mostrarMaquinariaDisponible(); return false;">
+                    <i class="fas fa-cog"></i> <span>MAQUINARIA DISPONIBLE</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-truck"></i>
-                    <span>En Tránsito</span>
+                <a href="#" class="nav-item" onclick="mostrarProveedores(); return false;">
+                    <i class="fas fa-building"></i> <span>Proveedores</span>
                 </a>
                 <a href="#" class="nav-item">
-                    <i class="fas fa-building"></i>
-                    <span>Proveedores</span>
+                    <i class="fas fa-file-pdf"></i> <span>Documentos</span>
                 </a>
                 <a href="#" class="nav-item">
-                    <i class="fas fa-file-pdf"></i>
-                    <span>Documentos</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Estadísticas</span>
+                    <i class="fas fa-chart-line"></i> <span>Estadísticas</span>
                 </a>
                 <hr style="border-color: rgba(14,165,233,0.2); margin: 16px 0;">
                 <a href="#" class="nav-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Configuración</span>
+                    <i class="fas fa-cog"></i> <span>Configuración</span>
                 </a>
                 <a href="{{ route('logout') }}" class="nav-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Salir</span>
+                    <i class="fas fa-sign-out-alt"></i> <span>Salir</span>
                 </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Header -->
             <div class="content-header">
                 <div class="header-title">
                     <h1 id="pageTitle">Dashboard Importaciones</h1>
@@ -1020,172 +841,87 @@
                 </div>
             </div>
 
-            <!-- Mensajes de éxito/error -->
             @if(session('success'))
-                <div class="alert alert-success" id="successAlert">
-                    <i class="fas fa-check-circle"></i>
-                    <span>{{ session('success') }}</span>
-                </div>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i><span>{{ session('success') }}</span></div>
             @endif
-
             @if(session('error'))
-                <div class="alert alert-danger" id="errorAlert">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>{{ session('error') }}</span>
-                </div>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i><span>{{ session('error') }}</span></div>
             @endif
 
-            <!-- Sección Dashboard (visible por defecto) -->
+            <!-- Dashboard Section -->
             <div id="dashboardSection">
-                <!-- Stats Cards -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon warning">
-                                <i class="fas fa-clock"></i>
-                            </div>
+                            <div class="stat-icon warning"><i class="fas fa-clock"></i></div>
                             <span class="stat-label">Órdenes Pendientes</span>
                         </div>
                         <div class="stat-value">{{ $stats['ordenes_pendientes'] ?? 0 }}</div>
-                        <div class="stat-trend text-warning">
-                            <i class="fas fa-exclamation-circle"></i>
-                            {{ $stats['ordenes_atrasadas'] ?? 0 }} atrasadas
-                        </div>
+                        <div class="stat-trend"><i class="fas fa-exclamation-circle"></i> {{ $stats['ordenes_atrasadas'] ?? 0 }} atrasadas</div>
                     </div>
-
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon info">
-                                <i class="fas fa-ship"></i>
-                            </div>
+                            <div class="stat-icon info"><i class="fas fa-ship"></i></div>
                             <span class="stat-label">En Tránsito</span>
                         </div>
                         <div class="stat-value">{{ $stats['en_transito'] ?? 0 }}</div>
-                        <div class="stat-trend text-info">
-                            <i class="fas fa-box"></i>
-                            {{ $stats['contenedores_activos'] ?? 0 }} contenedores
-                        </div>
+                        <div class="stat-trend"><i class="fas fa-box"></i> {{ $stats['contenedores_activos'] ?? 0 }} contenedores</div>
                     </div>
-
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon success">
-                                <i class="fas fa-calendar-check"></i>
-                            </div>
+                            <div class="stat-icon success"><i class="fas fa-calendar-check"></i></div>
                             <span class="stat-label">Llegadas Mes</span>
                         </div>
                         <div class="stat-value">{{ $stats['llegadas_este_mes'] ?? 0 }}</div>
-                        <div class="stat-trend text-success">
-                            <i class="fas fa-clock"></i>
-                            @if(isset($proximas_llegadas) && $proximas_llegadas->isNotEmpty() && isset($proximas_llegadas->first()->fecha))
-                                Próxima en {{ max(0, $proximas_llegadas->first()->fecha->diffInDays(now())) }} días
-                            @else
-                                Próxima en 2 días
-                            @endif
-                        </div>
+                        <div class="stat-trend"><i class="fas fa-clock"></i> Próxima en {{ $proximas_llegadas->first()->fecha->diffInDays(now()) ?? 2 }} días</div>
                     </div>
-
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon primary">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
+                            <div class="stat-icon primary"><i class="fas fa-dollar-sign"></i></div>
                             <span class="stat-label">Compras Mes</span>
                         </div>
                         <div class="stat-value">${{ number_format(($stats['monto_compras_mes'] ?? 1250000000) / 1000000, 0) }}M</div>
-                        <div class="stat-trend text-info">
-                            <i class="fas fa-building"></i>
-                            {{ $stats['proveedores_activos'] ?? 0 }} proveedores
-                        </div>
+                        <div class="stat-trend"><i class="fas fa-building"></i> {{ $stats['proveedores_activos'] ?? 0 }} proveedores</div>
                     </div>
                 </div>
 
-                <!-- Two Column Layout - Órdenes Pendientes y Envíos en Tránsito -->
                 <div class="two-column-grid">
-                    <!-- Órdenes de Compra Pendientes -->
+                    <!-- Órdenes Pendientes -->
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-file-invoice" style="color: var(--warning);"></i>
-                                Órdenes de Compra Pendientes
-                            </div>
+                            <div class="card-title"><i class="fas fa-file-invoice"></i> Órdenes de Compra Pendientes</div>
                             <span class="badge badge-warning">{{ $ordenes_pendientes->count() ?? 0 }} pendientes</span>
                         </div>
                         <div class="table-responsive">
-                            <table>
+                             <table>
                                 <thead>
-                                    <tr>
-                                        <th>N° Orden</th>
-                                        <th>Proveedor</th>
-                                        <th>Modelo</th>
-                                        <th>Cant.</th>
-                                        <th>Monto</th>
-                                        <th>Fecha Est.</th>
-                                        <th>Prioridad</th>
-                                        <th></th>
-                                    </tr>
+                                    <tr><th>N° Orden</th><th>Proveedor</th><th>Modelo</th><th>Cant.</th><th>Monto</th><th>Fecha Est.</th><th>Prioridad</th><th></th></tr>
                                 </thead>
                                 <tbody>
                                     @forelse($ordenes_pendientes ?? [] as $orden)
                                     <tr>
-                                        <td><strong>{{ $orden->numero_orden ?? $orden->id }}</strong></td>
-                                        <td>
-                                            {{ $orden->proveedor }}<br>
-                                            <small style="color: var(--text-dim);">{{ $orden->pais }}</small>
-                                        </td>
-                                        <td>
-                                            @if($orden->modelo_maquina)
-                                                <strong>{{ $orden->modelo_maquina }}</strong>
-                                            @else
-                                                <span style="color: var(--text-dim);">No especificado</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span class="badge" style="background: rgba(14, 165, 233, 0.2); color: var(--primary);">
-                                                {{ $orden->cantidad_maquinas ?? 1 }}
-                                            </span>
-                                        </td>
+                                        <td><strong>{{ $orden->numero_orden ?? $orden->id }}</strong><br><small>{{ $orden->pais }}</small></td>
+                                        <td>{{ $orden->proveedor }}</td>
+                                        <td>@if($orden->modelo_maquina)<strong>{{ $orden->modelo_maquina }}</strong>@else<span class="text-muted">No especificado</span>@endif</td>
+                                        <td><span class="badge" style="background:rgba(14,165,233,0.2);color:var(--primary);">{{ $orden->cantidad_maquinas ?? 1 }}</span></td>
                                         <td>${{ number_format(($orden->monto ?? 0) / 1000000, 0) }}M</td>
-                                        <td>
-                                            {{ $orden->fecha_estimada ? $orden->fecha_estimada->format('d/m') : 'N/A' }}<br>
-                                            @if($orden->fecha_estimada)
-                                            <small style="color: var(--text-dim);">en {{ max(0, $orden->fecha_estimada->diffInDays(now())) }} días</small>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span class="status-indicator status-{{ $orden->prioridad ?? 'media' }}"></span>
-                                            {{ ucfirst($orden->prioridad ?? 'media') }}
-                                        </td>
-                                        <td>
-                                            <button class="btn-sm" title="Ver detalles" onclick="verOrden({{ $orden->id }})">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </td>
+                                        <td>{{ $orden->fecha_estimada ? $orden->fecha_estimada->format('d/m') : 'N/A' }}<br><small>en {{ max(0, $orden->fecha_estimada->diffInDays(now())) }} días</small></td>
+                                        <td><span class="status-indicator status-{{ $orden->prioridad ?? 'media' }}"></span> {{ ucfirst($orden->prioridad ?? 'media') }}</td>
+                                        <td><button class="btn-sm" onclick="verOrden({{ $orden->id }})"><i class="fas fa-eye"></i></button></td>
                                     </tr>
                                     @empty
-                                    <tr>
-                                        <td colspan="8" style="text-align: center; padding: 20px;">
-                                            No hay órdenes pendientes
-                                        </td>
-                                    </tr>
+                                    <tr><td colspan="8" class="text-center">No hay órdenes pendientes</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
-                        <div style="margin-top: 16px; text-align: center;">
-                            <button onclick="mostrarListaOrdenes()" style="color: var(--primary); text-decoration: none; background: none; border: none; cursor: pointer;">
-                                Ver todas las órdenes →
-                            </button>
-                        </div>
+                        <div class="text-center mt-3"><button onclick="mostrarListaOrdenes()" style="color:var(--primary);background:none;border:none;cursor:pointer;">Ver todas las órdenes →</button></div>
                     </div>
 
                     <!-- Envíos en Tránsito -->
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-ship" style="color: var(--info);"></i>
-                                Envíos en Tránsito
-                            </div>
+                            <div class="card-title"><i class="fas fa-ship"></i> Envíos en Tránsito</div>
                             <span class="badge badge-info">{{ $envios_transito->count() ?? 0 }} activos</span>
                         </div>
                         <div class="shipment-grid">
@@ -1193,68 +929,30 @@
                             <div class="shipment-card">
                                 <div class="shipment-header">
                                     <span class="shipment-id">{{ $envio->contenedor }}</span>
-                                    <span class="badge 
-                                        @if(($envio->estado ?? '') == 'cercano') badge-success
-                                        @elseif(($envio->estado ?? '') == 'en_aduana_origen') badge-warning
-                                        @else badge-info
-                                        @endif">
-                                        {{ str_replace('_', ' ', ucfirst($envio->estado ?? 'en_navegacion')) }}
-                                    </span>
+                                    <span class="badge badge-info">{{ str_replace('_', ' ', ucfirst($envio->estado ?? 'en_navegacion')) }}</span>
                                 </div>
-                                <div style="font-weight: 600; margin-bottom: 4px;">{{ $envio->maquina }}</div>
-                                <div class="shipment-route">
-                                    <i class="fas fa-map-marker-alt"></i> {{ $envio->puerto_salida ?? 'Puerto origen' }} 
-                                    <i class="fas fa-arrow-right"></i> 
-                                    <i class="fas fa-anchor"></i> {{ $envio->puerto_llegada ?? 'San Antonio' }}
-                                </div>
-                                <div class="shipment-dates">
-                                    <div>Salida: {{ isset($envio->fecha_salida) ? $envio->fecha_salida->format('d/m') : 'N/A' }}</div>
-                                    <div>Llega: {{ isset($envio->fecha_llegada_estimada) ? $envio->fecha_llegada_estimada->format('d/m') : 'N/A' }}</div>
-                                </div>
-                                <div class="progress-bar" style="margin: 8px 0;">
-                                    <div class="progress-fill" style="width: {{ $envio->progreso ?? 0 }}%"></div>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; font-size: 11px;">
-                                    <span>Progreso: {{ $envio->progreso ?? 0 }}%</span>
-                                    <span class="badge 
-                                        @if(($envio->documentos ?? '') == 'completos') badge-success
-                                        @elseif(($envio->documentos ?? '') == 'pendientes') badge-warning
-                                        @else badge-info
-                                        @endif">
-                                        Docs: {{ $envio->documentos ?? 'pendientes' }}
-                                    </span>
-                                </div>
+                                <div><strong>{{ $envio->maquina }}</strong></div>
+                                <div class="shipment-route"><i class="fas fa-map-marker-alt"></i> {{ $envio->puerto_salida }} → {{ $envio->puerto_llegada }}</div>
+                                <div class="progress-bar"><div class="progress-fill" style="width: {{ $envio->progreso }}%"></div></div>
+                                <div><span>Progreso: {{ $envio->progreso }}%</span> <span>Docs: {{ $envio->documentos }}</span></div>
                             </div>
                             @empty
-                            <div class="shipment-card" style="grid-column: span 2; text-align: center;">
-                                No hay envíos en tránsito
-                            </div>
+                            <div class="shipment-card text-center">No hay envíos en tránsito</div>
                             @endforelse
                         </div>
                     </div>
                 </div>
 
-                <!-- Próximas Llegadas a Puerto -->
-                <div class="card" style="margin-bottom: 32px;">
+                <!-- Próximas Llegadas -->
+                <div class="card mb-3">
                     <div class="card-header">
-                        <div class="card-title">
-                            <i class="fas fa-calendar-alt" style="color: var(--success);"></i>
-                            Próximas Llegadas a Puerto
-                        </div>
+                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Próximas Llegadas a Puerto</div>
                         <span class="badge badge-success">{{ $proximas_llegadas->count() ?? 0 }} próximas</span>
                     </div>
                     <div class="table-responsive">
-                         <table>
+                        <table>
                             <thead>
-                                 <tr>
-                                    <th>Contenedor</th>
-                                    <th>Máquina</th>
-                                    <th>Puerto</th>
-                                    <th>Fecha Llegada</th>
-                                    <th>Estado</th>
-                                    <th>Días Restantes</th>
-                                    <th></th>
-                                </tr>
+                                <tr><th>Contenedor</th><th>Máquina</th><th>Puerto</th><th>Fecha Llegada</th><th>Estado</th><th>Días</th><th></th></tr>
                             </thead>
                             <tbody>
                                 @forelse($proximas_llegadas ?? [] as $llegada)
@@ -1262,510 +960,185 @@
                                     <td><strong>{{ $llegada->contenedor }}</strong></td>
                                     <td>{{ $llegada->maquina }}</td>
                                     <td>{{ $llegada->puerto ?? 'San Antonio' }}</td>
-                                    <td>{{ isset($llegada->fecha) ? $llegada->fecha->format('d/m/Y') : 'N/A' }}</td>
-                                    <td>
-                                        <span class="badge 
-                                            @if(($llegada->estado ?? '') == 'en_inspeccion') badge-warning
-                                            @elseif(($llegada->estado ?? '') == 'documentacion') badge-info
-                                            @else badge-success
-                                            @endif">
-                                            {{ ucfirst($llegada->estado ?? 'en_transito') }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @if(isset($llegada->fecha))
-                                        <strong>{{ max(0, $llegada->fecha->diffInDays(now())) }} días</strong>
-                                        @else
-                                        <strong>N/A</strong>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @php
-                                            $idFromContenedor = str_replace('CONT-', '', $llegada->contenedor);
-                                        @endphp
-                                        <button class="btn-sm" onclick="verOrden({{ $idFromContenedor }})">
-                                            <i class="fas fa-clipboard-list"></i>
-                                        </button>
-                                    </td>
+                                    <td>{{ $llegada->fecha->format('d/m/Y') }}</td>
+                                    <td><span class="badge badge-success">{{ ucfirst($llegada->estado) }}</span></td>
+                                    <td><strong>{{ max(0, $llegada->fecha->diffInDays(now())) }} días</strong></td>
+                                    <td><button class="btn-sm" onclick="verOrden({{ str_replace('CONT-', '', $llegada->contenedor) }})"><i class="fas fa-clipboard-list"></i></button></td>
                                 </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="7" style="text-align: center; padding: 20px;">
-                                        No hay próximas llegadas
-                                    </td>
-                                </tr>
+                                <tr><td colspan="7" class="text-center">No hay próximas llegadas</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Two Column Layout - Proveedores y Documentos -->
+                <!-- Proveedores y Documentos -->
                 <div class="two-column-grid">
-                    <!-- Proveedores Activos -->
                     <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-building" style="color: var(--primary);"></i>
-                                Proveedores Activos
-                            </div>
-                        </div>
+                        <div class="card-header"><div class="card-title"><i class="fas fa-building"></i> Proveedores Activos</div></div>
                         <div class="table-responsive">
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Proveedor</th>
-                                        <th>País</th>
-                                        <th>Órdenes</th>
-                                        <th>Tiempo Prom.</th>
-                                        <th>Cumplimiento</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr><th>Proveedor</th><th>País</th><th>Órdenes</th><th>Tiempo Prom.</th><th>Cumplimiento</th></tr></thead>
                                 <tbody>
                                     @forelse($proveedores ?? [] as $proveedor)
-                                    <tr>
-                                        <td><strong>{{ $proveedor->nombre }}</strong></td>
-                                        <td>{{ $proveedor->pais ?? 'N/A' }}</td>
-                                        <td>{{ $proveedor->ordenes_activas ?? 0 }}</td>
-                                        <td>{{ $proveedor->tiempo_promedio ?? 0 }} días</td>
-                                        <td>
-                                            <span class="badge badge-success">{{ $proveedor->cumplimiento ?? 0 }}%</span>
-                                        </td>
-                                    </tr>
+                                    <tr><td><strong>{{ $proveedor->nombre }}</strong></td><td>{{ $proveedor->pais ?? 'N/A' }}</td><td>{{ $proveedor->ordenes_activas ?? 0 }}</td><td>{{ $proveedor->tiempo_promedio ?? 0 }} días</td><td><span class="badge badge-success">{{ $proveedor->cumplimiento ?? 0 }}%</span></td></tr>
                                     @empty
-                                    <tr>
-                                        <td colspan="5" style="text-align: center; padding: 20px;">
-                                            No hay proveedores
-                                        </td>
-                                    </tr>
+                                    <tr><td colspan="5" class="text-center">No hay proveedores</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
-                    <!-- Documentos Pendientes -->
                     <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-file-pdf" style="color: var(--danger);"></i>
-                                Documentos Pendientes
-                            </div>
-                            <span class="badge badge-danger">{{ $documentos_pendientes->count() ?? 0 }} pendientes</span>
-                        </div>
+                        <div class="card-header"><div class="card-title"><i class="fas fa-file-pdf"></i> Documentos Pendientes</div><span class="badge badge-danger">{{ $documentos_pendientes->count() ?? 0 }} pendientes</span></div>
                         <div>
                             @forelse($documentos_pendientes ?? [] as $doc)
-                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--card-border); flex-wrap: wrap; gap: 10px;">
-                                <div>
-                                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                        <i class="fas fa-file-pdf" style="color: var(--danger);"></i>
-                                        <div>
-                                            <strong>{{ $doc->tipo }}</strong><br>
-                                            <small style="color: var(--text-dim);">{{ $doc->contenedor }} · {{ $doc->proveedor }}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <span class="badge 
-                                        @if(($doc->prioridad ?? '') == 'urgente') badge-danger
-                                        @elseif(($doc->prioridad ?? '') == 'alta') badge-warning
-                                        @else badge-info
-                                        @endif">
-                                        {{ ucfirst($doc->prioridad ?? 'media') }}
-                                    </span>
-                                    <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">
-                                        Requerido: {{ isset($doc->fecha_requerida) ? $doc->fecha_requerida->format('d/m') : 'N/A' }}
-                                    </div>
-                                </div>
+                            <div style="display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid var(--card-border);">
+                                <div><i class="fas fa-file-pdf" style="color:var(--danger);"></i> <strong>{{ $doc->tipo }}</strong><br><small>{{ $doc->contenedor }} · {{ $doc->proveedor }}</small></div>
+                                <div><span class="badge badge-warning">{{ ucfirst($doc->prioridad) }}</span><br><small>Requerido: {{ $doc->fecha_requerida->format('d/m') }}</small></div>
                             </div>
                             @empty
-                            <div style="text-align: center; padding: 20px;">
-                                No hay documentos pendientes
-                            </div>
+                            <div class="text-center p-4">No hay documentos pendientes</div>
                             @endforelse
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumen de Importaciones -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px;">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-chart-pie"></i>
-                                Orígenes de Importación
-                            </div>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            @php
-                                $proveedoresData = $proveedores ?? collect([]);
-                                $paises = $proveedoresData->groupBy('pais')->map->count();
-                                $total = max($paises->sum(), 4);
-                                $usa = round(($paises['EE.UU.'] ?? 2) / $total * 100);
-                                $japon = round(($paises['Japón'] ?? 1) / $total * 100);
-                                $europa = round(($paises['Suecia'] ?? 1) / $total * 100);
-                                $china = round(($paises['China'] ?? 0) / $total * 100);
-                            @endphp
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>EE.UU.</span>
-                                    <span>{{ $usa }}%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: {{ $usa }}%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>Japón</span>
-                                    <span>{{ $japon }}%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: {{ $japon }}%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>Europa</span>
-                                    <span>{{ $europa }}%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: {{ $europa }}%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>China</span>
-                                    <span>{{ $china }}%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: {{ $china }}%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-clock"></i>
-                                Tiempos de Tránsito
-                            </div>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>EE.UU.</span>
-                                    <span>18-22 días</span>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>Japón</span>
-                                    <span>25-30 días</span>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>Europa</span>
-                                    <span>28-35 días</span>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>China</span>
-                                    <span>20-25 días</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fas fa-bell"></i>
-                                Alertas de Importación
-                            </div>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
-                            @php
-                                $primerDoc = $documentos_pendientes->first() ?? null;
-                                $primerEnvio = $envios_transito->first() ?? null;
-                                $primerOrden = $ordenes_pendientes->first() ?? null;
-                            @endphp
-                            <div style="padding: 12px; background: rgba(239, 68, 68, 0.1); border-radius: 12px;">
-                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
-                                    <div>
-                                        <strong>Documentos pendientes</strong>
-                                        <p style="font-size: 12px;">{{ $primerDoc->contenedor ?? 'Contenedor KOMU-123456' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 12px;">
-                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <i class="fas fa-clock" style="color: var(--warning);"></i>
-                                    <div>
-                                        <strong>Llegada próxima</strong>
-                                        <p style="font-size: 12px;">
-                                            {{ $primerEnvio->contenedor ?? 'CATU-456790' }} 
-                                            @if(isset($primerEnvio->fecha_llegada_estimada))
-                                                en {{ max(0, $primerEnvio->fecha_llegada_estimada->diffInDays(now())) }} días
-                                            @else
-                                                en 2 días
-                                            @endif
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 12px;">
-                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                                    <div>
-                                        <strong>Orden completada</strong>
-                                        <p style="font-size: 12px;">{{ $primerOrden->numero_orden ?? 'OC-2024-004' }} lista para despacho</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sección Lista de Órdenes (oculta por defecto) -->
+            <!-- Secciones ocultas -->
             <div id="listaOrdenesSection" style="display: none;"></div>
-
-            <!-- Sección Formulario Crear/Editar (oculta por defecto) -->
             <div id="formularioSection" style="display: none;"></div>
-
-            <!-- Sección Ver Orden (oculta por defecto) -->
             <div id="verOrdenSection" style="display: none;"></div>
 
-            <!-- Sección Maquinaria Disponible -->
+            <!-- Maquinaria Disponible -->
             <div id="maquinariaDisponibleSection" style="display: none;">
-                <div class="d-flex justify-content-between align-items-center mb-4" style="flex-wrap: wrap; gap: 15px;">
-                    <div>
-                        <h2 style="color: var(--text-light); margin: 0;">
-                            <i class="fas fa-cog" style="color: var(--primary);"></i> 
-                            MAQUINARIA DISPONIBLE
-                        </h2>
-                        <p style="color: var(--text-dim);">Máquinas listas para venta en inventario</p>
-                    </div>
-                    <a href="{{ route('maquinas.create') }}" class="btn-success" style="padding: 10px 20px; text-decoration: none; white-space: nowrap;">
-                        <i class="fas fa-plus"></i> Registrar Máquina
-                    </a>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:15px;">
+                    <div><h2><i class="fas fa-cog"></i> MAQUINARIA DISPONIBLE</h2><p>Máquinas listas para venta en inventario</p></div>
+                    <a href="{{ route('maquinas.create') }}" class="btn-success"><i class="fas fa-plus"></i> Registrar Máquina</a>
                 </div>
 
-                <!-- Stats Cards -->
-                <div class="maquinaria-stats-grid mb-4" id="maquinariaStatsContainer">
-                    <div class="maquinaria-stat-card">
-                        <div class="maquinaria-stat-header">
-                            <span class="maquinaria-stat-label">Disponibles</span>
-                            <div class="maquinaria-stat-icon success"><i class="fas fa-check-circle"></i></div>
-                        </div>
-                        <div class="maquinaria-stat-value" id="stats-disponibles">0</div>
-                    </div>
-                    <div class="maquinaria-stat-card">
-                        <div class="maquinaria-stat-header">
-                            <span class="maquinaria-stat-label">En Camino</span>
-                            <div class="maquinaria-stat-icon warning"><i class="fas fa-ship"></i></div>
-                        </div>
-                        <div class="maquinaria-stat-value" id="stats-camino">0</div>
-                    </div>
-                    <div class="maquinaria-stat-card">
-                        <div class="maquinaria-stat-header">
-                            <span class="maquinaria-stat-label">Reservadas</span>
-                            <div class="maquinaria-stat-icon primary"><i class="fas fa-clock"></i></div>
-                        </div>
-                        <div class="maquinaria-stat-value" id="stats-reservadas">0</div>
-                    </div>
-                    <div class="maquinaria-stat-card">
-                        <div class="maquinaria-stat-header">
-                            <span class="maquinaria-stat-label">Vendidas</span>
-                            <div class="maquinaria-stat-icon info"><i class="fas fa-chart-line"></i></div>
-                        </div>
-                        <div class="maquinaria-stat-value" id="stats-vendidas">0</div>
-                    </div>
+                <div class="maquinaria-stats-grid">
+                    <div class="maquinaria-stat-card"><div class="maquinaria-stat-header"><span>Disponibles</span><div class="maquinaria-stat-icon success"><i class="fas fa-check-circle"></i></div></div><div class="maquinaria-stat-value" id="stats-disponibles">0</div></div>
+                    <div class="maquinaria-stat-card"><div class="maquinaria-stat-header"><span>En Camino</span><div class="maquinaria-stat-icon warning"><i class="fas fa-ship"></i></div></div><div class="maquinaria-stat-value" id="stats-camino">0</div></div>
+                    <div class="maquinaria-stat-card"><div class="maquinaria-stat-header"><span>Reservadas</span><div class="maquinaria-stat-icon primary"><i class="fas fa-clock"></i></div></div><div class="maquinaria-stat-value" id="stats-reservadas">0</div></div>
+                    <div class="maquinaria-stat-card"><div class="maquinaria-stat-header"><span>Vendidas</span><div class="maquinaria-stat-icon info"><i class="fas fa-chart-line"></i></div></div><div class="maquinaria-stat-value" id="stats-vendidas">0</div></div>
                 </div>
 
-                <!-- Filtros -->
                 <div class="filtros-card">
-                    <form id="maquinariaFiltrosForm">
+                    <form id="maquinariaFiltrosForm" onsubmit="event.preventDefault(); cargarMaquinariaDisponible();">
                         <div class="filtros-grid">
-                            <div>
-                                <label class="form-label">Buscar</label>
-                                <input type="text" class="form-control" id="buscarMaquina" placeholder="Modelo, marca, serie...">
-                            </div>
-                            <div>
-                                <label class="form-label">Marca</label>
-                                <select class="form-control" id="filtroMarca">
-                                    <option value="">Todas</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="form-label">Precio Mín.</label>
-                                <input type="number" class="form-control" id="precioMin" placeholder="0">
-                            </div>
-                            <div>
-                                <label class="form-label">Precio Máx.</label>
-                                <input type="number" class="form-control" id="precioMax" placeholder="1000000">
-                            </div>
-                            <div style="display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap;">
-                                <button type="submit" class="btn-primary">
-                                    <i class="fas fa-search"></i> Filtrar
-                                </button>
-                                <button type="button" class="btn-outline-secondary" onclick="limpiarFiltrosMaquinaria()">
-                                    <i class="fas fa-undo"></i>
-                                </button>
-                            </div>
+                            <div><label class="form-label">Buscar</label><input type="text" class="form-control" id="buscarMaquina" placeholder="Modelo, marca, serie..."></div>
+                            <div><label class="form-label">Marca</label><select class="form-control" id="filtroMarca"><option value="">Todas</option></select></div>
+                            <div><label class="form-label">Precio Mín.</label><input type="number" class="form-control" id="precioMin" placeholder="0"></div>
+                            <div><label class="form-label">Precio Máx.</label><input type="number" class="form-control" id="precioMax" placeholder="1000000"></div>
+                            <div><button type="submit" class="btn-primary"><i class="fas fa-search"></i> Filtrar</button><button type="button" class="btn-outline-secondary" onclick="limpiarFiltrosMaquinaria()"><i class="fas fa-undo"></i></button></div>
                         </div>
                     </form>
                 </div>
 
-                <!-- Tabla de Maquinaria -->
                 <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Máquina</th>
-                                        <th>Marca / Modelo</th>
-                                        <th>Año</th>
-                                        <th>Serie</th>
-                                        <th>Precio Venta</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="maquinariaTableBody">
-                                    <tr>
-                                        <td colspan="8" style="text-align: center; padding: 40px;">
-                                            <i class="fas fa-cog fa-3x" style="color: var(--text-dim); margin-bottom: 16px;"></i>
-                                            <p style="color: var(--text-dim);">Cargando máquinas...</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <th>ID</th><th>Máquina</th><th>Marca/Modelo</th><th>Año</th><th>Serie</th><th>Precio</th><th>Estado</th><th>Acciones</th>
+                            </thead>
+                            <tbody id="maquinariaTableBody">
+                                <td colspan="8" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proveedores -->
+            <div id="proveedoresSection" style="display: none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:15px;">
+                    <div><h2><i class="fas fa-building"></i> PROVEEDORES</h2><p>Gestión de proveedores de maquinaria</p></div>
+                    <a href="{{ route('proveedores.create') }}" class="btn-success"><i class="fas fa-plus"></i> Nuevo Proveedor</a>
+                </div>
+
+                <div class="filtros-card">
+                    <form id="proveedoresFiltrosForm" onsubmit="event.preventDefault(); cargarListaProveedores();">
+                        <div class="filtros-grid">
+                            <div><label class="form-label">Buscar</label><input type="text" class="form-control" id="buscarProveedor" placeholder="Nombre, código, NIT, país..."></div>
+                            <div><label class="form-label">Tipo</label><select class="form-control" id="filtroTipo"><option value="">Todos</option><option value="nacional">Nacional</option><option value="internacional">Internacional</option></select></div>
+                            <div><label class="form-label">Estado</label><select class="form-control" id="filtroEstado"><option value="">Todos</option><option value="1">Activos</option><option value="0">Inactivos</option></select></div>
+                            <div><button type="submit" class="btn-primary"><i class="fas fa-search"></i> Filtrar</button><button type="button" class="btn-outline-secondary" onclick="limpiarFiltrosProveedores()"><i class="fas fa-undo"></i></button></div>
                         </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <th>Código</th><th>Nombre</th><th>NIT</th><th>País</th><th>Tipo</th><th>Contacto</th><th>Estado</th><th>Acciones</th>
+                            </thead>
+                            <tbody id="proveedoresTableBody">
+                                <td colspan="8" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</td>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modal para cambiar estado -->
+    <!-- Modal -->
     <div class="modal" id="estadoModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Cambiar Estado</h2>
-                <button class="modal-close" onclick="cerrarModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="maquinaId">
-                <div class="form-group">
-                    <label class="form-label">Nuevo Estado</label>
-                    <select class="form-control" id="nuevoEstado">
-                        <option value="disponible">📦 Disponible</option>
-                        <option value="en_bodega">🏭 En Bodega</option>
-                        <option value="en_transito">🚢 En Tránsito</option>
-                        <option value="en_puerto">⚓ En Puerto</option>
-                        <option value="reparacion">🔧 En Reparación</option>
-                        <option value="fabricacion">🏗️ En Fabricación</option>
-                        <option value="pendiente_despacho">⏳ Vendida (Pendiente Despacho)</option>
-                        <option value="cancelado">❌ Cancelado</option>
-                        <option value="vendida">💰 Vendida</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer" style="display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap;">
-                <button class="btn-outline-secondary" onclick="cerrarModal()">Cancelar</button>
-                <button class="btn-primary" onclick="cambiarEstadoMaquina()">Guardar Cambios</button>
-            </div>
+            <h2>Cambiar Estado</h2>
+            <input type="hidden" id="maquinaId">
+            <div class="form-group"><label class="form-label">Nuevo Estado</label><select class="form-control" id="nuevoEstado">
+                <option value="disponible">📦 Disponible</option><option value="en_bodega">🏭 En Bodega</option><option value="en_transito">🚢 En Tránsito</option>
+                <option value="en_puerto">⚓ En Puerto</option><option value="reparacion">🔧 En Reparación</option><option value="fabricacion">🏗️ En Fabricación</option>
+                <option value="pendiente_despacho">⏳ Pendiente Despacho</option><option value="cancelado">❌ Cancelado</option><option value="vendida">💰 Vendida</option>
+            </select></div>
+            <div style="display:flex;gap:12px;justify-content:flex-end;"><button class="btn-outline-secondary" onclick="cerrarModal()">Cancelar</button><button class="btn-primary" onclick="cambiarEstadoMaquina()">Guardar</button></div>
         </div>
     </div>
 
     <script>
-        // Token CSRF para peticiones AJAX
         const csrfToken = '{{ csrf_token() }}';
         
-        // Función para toggle sidebar en móvil
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
         
-        // Cerrar sidebar al hacer clic fuera en móvil
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const mobileBtn = document.querySelector('.mobile-menu-btn');
-            
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(event.target) && !mobileBtn.contains(event.target)) {
-                    sidebar.classList.remove('active');
-                }
+        document.addEventListener('click', function(e) {
+            if(window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const btn = document.querySelector('.mobile-menu-btn');
+                if(!sidebar.contains(e.target) && !btn.contains(e.target)) sidebar.classList.remove('active');
             }
         });
 
-        // Búsqueda en tiempo real
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const searchTerm = this.value;
-                    mostrarListaOrdenes(searchTerm);
-                }
-            });
-        }
+        function verOrden(id) { if(id) window.location.href = '/importaciones/' + id; }
 
-        // Auto-ocultar alertas después de 5 segundos
-        setTimeout(function() {
-            document.querySelectorAll('.alert').forEach(function(alert) {
-                alert.style.transition = 'opacity 0.5s';
-                alert.style.opacity = '0';
-                setTimeout(function() {
-                    alert.style.display = 'none';
-                }, 500);
-            });
-        }, 5000);
-
-        // Funciones de navegación
         function mostrarDashboard() {
             document.getElementById('dashboardSection').style.display = 'block';
             document.getElementById('listaOrdenesSection').style.display = 'none';
             document.getElementById('formularioSection').style.display = 'none';
             document.getElementById('verOrdenSection').style.display = 'none';
             document.getElementById('maquinariaDisponibleSection').style.display = 'none';
+            document.getElementById('proveedoresSection').style.display = 'none';
             document.getElementById('pageTitle').innerText = 'Dashboard Importaciones';
-            document.getElementById('pageDescription').innerText = 'Gestión de compras internacionales y seguimiento de envíos';
-            
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelector('.nav-item[href="{{ route('dashboard.importaciones') }}"]').classList.add('active');
-            
-            // Cerrar sidebar en móvil
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('active');
-            }
+            document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+            document.querySelectorAll('.nav-item')[0].classList.add('active');
+            if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('active');
         }
 
-        function mostrarListaOrdenes(search = '') {
+        function mostrarListaOrdenes() {
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('listaOrdenesSection').style.display = 'block';
             document.getElementById('formularioSection').style.display = 'none';
             document.getElementById('verOrdenSection').style.display = 'none';
             document.getElementById('maquinariaDisponibleSection').style.display = 'none';
+            document.getElementById('proveedoresSection').style.display = 'none';
             document.getElementById('pageTitle').innerText = 'Órdenes de Compra';
-            document.getElementById('pageDescription').innerText = 'Gestión de órdenes de importación';
-            
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
             document.querySelectorAll('.nav-item')[1].classList.add('active');
-            
-            cargarListaOrdenes(search);
-            
-            // Cerrar sidebar en móvil
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('active');
-            }
+            cargarListaOrdenes();
+            if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('active');
         }
 
         function mostrarMaquinariaDisponible() {
@@ -1774,407 +1147,265 @@
             document.getElementById('formularioSection').style.display = 'none';
             document.getElementById('verOrdenSection').style.display = 'none';
             document.getElementById('maquinariaDisponibleSection').style.display = 'block';
+            document.getElementById('proveedoresSection').style.display = 'none';
             document.getElementById('pageTitle').innerText = 'Maquinaria Disponible';
-            document.getElementById('pageDescription').innerText = 'Gestión de inventario y maquinaria lista para venta';
-            
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
             document.querySelectorAll('.nav-item')[2].classList.add('active');
-            
             cargarMaquinariaDisponible();
             cargarEstadisticasMaquinaria();
             cargarOpcionesFiltros();
-            
-            // Cerrar sidebar en móvil
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('active');
-            }
+            if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('active');
         }
 
-        // ✅ FUNCIÓN CORREGIDA: Ver orden usando ID numérico
-        function verOrden(id) {
-            if (!id) {
-                console.error('ID no válido');
-                return;
-            }
-            window.location.href = '/importaciones/' + id;
+        function mostrarProveedores() {
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('listaOrdenesSection').style.display = 'none';
+            document.getElementById('formularioSection').style.display = 'none';
+            document.getElementById('verOrdenSection').style.display = 'none';
+            document.getElementById('maquinariaDisponibleSection').style.display = 'none';
+            document.getElementById('proveedoresSection').style.display = 'block';
+            document.getElementById('pageTitle').innerText = 'Proveedores';
+            document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+            document.querySelectorAll('.nav-item')[3].classList.add('active');
+            cargarListaProveedores();
+            if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('active');
         }
 
-        // FUNCIÓN: Cargar estadísticas
+        // ==================== FUNCIONES MAQUINARIA ====================
+        
         function cargarEstadisticasMaquinaria() {
-            fetch('{{ route("importaciones.maquinaria-disponible.estadisticas") }}', {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('stats-disponibles').textContent = data.disponibles || 0;
-                document.getElementById('stats-camino').textContent = data.en_camino || 0;
-                document.getElementById('stats-reservadas').textContent = data.reservadas || 0;
-                document.getElementById('stats-vendidas').textContent = data.vendidas || 0;
-            })
-            .catch(() => {
-                document.getElementById('stats-disponibles').textContent = '0';
-                document.getElementById('stats-camino').textContent = '0';
-                document.getElementById('stats-reservadas').textContent = '0';
-                document.getElementById('stats-vendidas').textContent = '0';
+            fetch('/maquinaria-disponible/estadisticas',{headers:{'X-Requested-With':'XMLHttpRequest'}})
+            .then(r=>r.json()).then(d=>{
+                document.getElementById('stats-disponibles').textContent=d.disponibles||0;
+                document.getElementById('stats-camino').textContent=d.en_camino||0;
+                document.getElementById('stats-reservadas').textContent=d.reservadas||0;
+                document.getElementById('stats-vendidas').textContent=d.vendidas||0;
+            }).catch(()=>{
+                document.getElementById('stats-disponibles').textContent='0';
+                document.getElementById('stats-camino').textContent='0';
+                document.getElementById('stats-reservadas').textContent='0';
+                document.getElementById('stats-vendidas').textContent='0';
             });
         }
 
-        // FUNCIÓN: Cargar opciones para filtros
         function cargarOpcionesFiltros() {
-            const marcasSelect = document.getElementById('filtroMarca');
-            marcasSelect.innerHTML = '<option value="">Todas</option>';
-            
-            fetch('{{ route("importaciones.maquinaria-disponible") }}?marcas=1', {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.marcas && data.marcas.length > 0) {
-                    data.marcas.forEach(marca => {
-                        const option = document.createElement('option');
-                        option.value = marca;
-                        option.textContent = marca;
-                        marcasSelect.appendChild(option);
-                    });
-                }
-            })
-            .catch(() => {
-                const marcas = ['CAT', 'KOMATSU', 'JOHN DEERE', 'VOLVO'];
-                marcas.forEach(marca => {
-                    const option = document.createElement('option');
-                    option.value = marca;
-                    option.textContent = marca;
-                    marcasSelect.appendChild(option);
-                });
-            });
+            const marcasSelect=document.getElementById('filtroMarca');
+            if(!marcasSelect) return;
+            marcasSelect.innerHTML='<option value="">Todas</option>';
+            fetch('/maquinaria-disponible?marcas=1',{headers:{'X-Requested-With':'XMLHttpRequest'}})
+            .then(r=>r.json()).then(d=>{if(d.marcas) d.marcas.forEach(m=>{let o=document.createElement('option');o.value=m;o.textContent=m;marcasSelect.appendChild(o);});});
         }
 
-        // FUNCIÓN: Cargar datos de maquinaria disponible
         function cargarMaquinariaDisponible() {
-            const tableBody = document.getElementById('maquinariaTableBody');
-            tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin fa-3x"></i><p style="margin-top: 16px;">Cargando máquinas...</p></td></tr>';
-            
-            let url = '{{ route("importaciones.maquinaria-disponible") }}';
-            const params = new URLSearchParams();
-            
-            const buscar = document.getElementById('buscarMaquina')?.value;
-            const marca = document.getElementById('filtroMarca')?.value;
-            const precioMin = document.getElementById('precioMin')?.value;
-            const precioMax = document.getElementById('precioMax')?.value;
-            
-            if (buscar) params.append('buscar', buscar);
-            if (marca) params.append('marca', marca);
-            if (precioMin) params.append('precio_min', precioMin);
-            if (precioMax) params.append('precio_max', precioMax);
-            
-            if (params.toString()) {
-                url += '?' + params.toString();
-            }
-            
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.html) {
-                    tableBody.innerHTML = data.html;
-                } else {
-                    tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--danger);">Error al cargar los datos</td></tr>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--danger);">Error al cargar los datos</td></tr>';
+            const tb=document.getElementById('maquinariaTableBody');
+            if(!tb) return;
+            tb.innerHTML='<tr><td colspan="8" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>';
+            let url='/maquinaria-disponible';
+            const p=new URLSearchParams();
+            const buscar=document.getElementById('buscarMaquina')?.value;
+            const marca=document.getElementById('filtroMarca')?.value;
+            if(buscar) p.append('buscar',buscar);
+            if(marca && marca!=='') p.append('marca',marca);
+            if(p.toString()) url+='?'+p.toString();
+            fetch(url,{headers:{'X-Requested-With':'XMLHttpRequest','Accept':'application/json'}})
+            .then(r=>r.json()).then(d=>{
+                if(d.success&&d.html) {
+                    tb.innerHTML=d.html;
+                    setTimeout(() => inicializarToggles(), 100);
+                } else tb.innerHTML='<tr><td colspan="8" class="text-center">Error</td></tr>';
             });
         }
 
         function limpiarFiltrosMaquinaria() {
-            document.getElementById('buscarMaquina').value = '';
-            document.getElementById('filtroMarca').value = '';
-            document.getElementById('precioMin').value = '';
-            document.getElementById('precioMax').value = '';
+            document.getElementById('buscarMaquina').value='';
+            document.getElementById('filtroMarca').value='';
+            document.getElementById('precioMin').value='';
+            document.getElementById('precioMax').value='';
             cargarMaquinariaDisponible();
         }
 
-        document.getElementById('maquinariaFiltrosForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            cargarMaquinariaDisponible();
-        });
-
-        function abrirModalEstado(id, estadoActual) {
-            document.getElementById('maquinaId').value = id;
-            document.getElementById('nuevoEstado').value = estadoActual;
-            document.getElementById('estadoModal').classList.add('active');
-        }
-
-        function cerrarModal() {
-            document.getElementById('estadoModal').classList.remove('active');
-        }
-
-        function cambiarEstadoMaquina() {
-            const id = document.getElementById('maquinaId').value;
-            const estado = document.getElementById('nuevoEstado').value;
-            
-            fetch('{{ route("importaciones.maquinaria-disponible.cambiar-estado", ["id" => "ID_REEMPLAZAR"]) }}'.replace('ID_REEMPLAZAR', id), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({ estado: estado })
+        function cambiarEstadoMaquina(){
+            const id=document.getElementById('maquinaId').value;
+            const estado=document.getElementById('nuevoEstado').value;
+            fetch(`/maquinaria-disponible/${id}/cambiar-estado`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json','X-CSRF-TOKEN':csrfToken},
+                body:JSON.stringify({estado:estado})
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+            .then(r=>r.json()).then(d=>{
+                if(d.success){
                     cerrarModal();
                     cargarMaquinariaDisponible();
                     cargarEstadisticasMaquinaria();
-                    mostrarAlerta('success', data.message);
+                    alert(d.message);
+                } else alert(d.message);
+            });
+        }
+
+        function eliminarMaquina(id){
+            if(confirm('¿Eliminar?')){
+                fetch(`/maquinas/${id}`,{method:'DELETE',headers:{'X-CSRF-TOKEN':csrfToken}})
+                .then(()=>{
+                    cargarMaquinariaDisponible();
+                    cargarEstadisticasMaquinaria();
+                });
+            }
+        }
+
+        function reservarMaquina(id){
+            if(confirm('¿Reservar?')){
+                fetch(`/maquinaria-disponible/${id}/reservar`,{
+                    method:'POST',
+                    headers:{'X-CSRF-TOKEN':csrfToken}
+                })
+                .then(r=>r.json()).then(d=>{
+                    if(d.success){
+                        cargarMaquinariaDisponible();
+                        cargarEstadisticasMaquinaria();
+                        alert(d.message);
+                    } else alert(d.message);
+                });
+            }
+        }
+
+        function venderMaquina(id){
+            if(confirm('¿Vender?')){
+                fetch(`/maquinaria-disponible/${id}/vender`,{
+                    method:'POST',
+                    headers:{'X-CSRF-TOKEN':csrfToken}
+                })
+                .then(r=>r.json()).then(d=>{
+                    if(d.success){
+                        cargarMaquinariaDisponible();
+                        cargarEstadisticasMaquinaria();
+                        alert(d.message);
+                    } else alert(d.message);
+                });
+            }
+        }
+
+        function verMaquina(id){
+            window.location.href = `/maquinas/${id}`;
+        }
+
+        function editarMaquina(id){
+            window.location.href = `/maquinas/${id}/edit`;
+        }
+
+        function inicializarToggles() {
+            const headers = document.querySelectorAll('.grupo-header');
+            headers.forEach(header => {
+                const checkbox = header.previousElementSibling;
+                if(checkbox && checkbox.classList.contains('toggle-grupo')) {
+                    header.addEventListener('click', function(e) {
+                        if(e.target.tagName !== 'LABEL' && !e.target.closest('label')) {
+                            checkbox.checked = !checkbox.checked;
+                            let nextElement = header.nextElementSibling;
+                            let filasGrupo = [];
+                            while(nextElement && !nextElement.classList.contains('grupo-header')) {
+                                if(nextElement.classList.contains('grupo-fila')) filasGrupo.push(nextElement);
+                                nextElement = nextElement.nextElementSibling;
+                            }
+                            filasGrupo.forEach(fila => fila.style.display = checkbox.checked ? 'table-row' : 'none');
+                            const icono = header.querySelector('.icono');
+                            if(icono) icono.style.transform = checkbox.checked ? 'rotate(90deg)' : 'rotate(0deg)';
+                        }
+                    });
+                    const label = header.querySelector('label');
+                    if(label) {
+                        label.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            checkbox.checked = !checkbox.checked;
+                            let nextElement = header.nextElementSibling;
+                            let filasGrupo = [];
+                            while(nextElement && !nextElement.classList.contains('grupo-header')) {
+                                if(nextElement.classList.contains('grupo-fila')) filasGrupo.push(nextElement);
+                                nextElement = nextElement.nextElementSibling;
+                            }
+                            filasGrupo.forEach(fila => fila.style.display = checkbox.checked ? 'table-row' : 'none');
+                            const icono = header.querySelector('.icono');
+                            if(icono) icono.style.transform = checkbox.checked ? 'rotate(90deg)' : 'rotate(0deg)';
+                        });
+                    }
                 }
             });
         }
 
-        function eliminarMaquina(id) {
-            if (confirm('¿Estás seguro de eliminar esta máquina?\nEsta acción no se puede deshacer.')) {
-                fetch(`/maquinas/${id}`, {
-                    method: 'DELETE',
+        // ==================== FUNCIONES PROVEEDORES ====================
+        
+        function cargarListaProveedores() {
+            const tb=document.getElementById('proveedoresTableBody');
+            if(!tb) return;
+            tb.innerHTML='<tr><td colspan="8" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>';
+            let url='{{ route("proveedores.index") }}';
+            const p=new URLSearchParams();
+            const buscar=document.getElementById('buscarProveedor')?.value;
+            const tipo=document.getElementById('filtroTipo')?.value;
+            const estado=document.getElementById('filtroEstado')?.value;
+            if(buscar) p.append('buscar',buscar);
+            if(tipo && tipo!=='') p.append('tipo',tipo);
+            if(estado!=='') p.append('activo',estado);
+            if(p.toString()) url+='?'+p.toString();
+            fetch(url,{headers:{'X-Requested-With':'XMLHttpRequest','Accept':'application/json'}})
+            .then(r=>r.json()).then(d=>{if(d.success&&d.html) tb.innerHTML=d.html; else tb.innerHTML='<tr><td colspan="8" class="text-center">Error</td></tr>';});
+        }
+
+        function limpiarFiltrosProveedores() {
+            document.getElementById('buscarProveedor').value='';
+            document.getElementById('filtroTipo').value='';
+            document.getElementById('filtroEstado').value='';
+            cargarListaProveedores();
+        }
+
+        function toggleActivoProveedor(id, activo) {
+            if(confirm('¿Cambiar estado del proveedor?')) {
+                fetch(`/proveedores/${id}/toggle-activo`, {
+                    method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ activo: activo === 1 ? 0 : 1 })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        mostrarAlerta('success', 'Máquina eliminada correctamente');
-                        cargarMaquinariaDisponible();
-                        cargarEstadisticasMaquinaria();
+                .then(r => r.json())
+                .then(d => {
+                    if(d.success) {
+                        cargarListaProveedores();
+                        alert(d.message);
                     } else {
-                        mostrarAlerta('error', 'Error al eliminar la máquina');
+                        alert('Error al cambiar estado');
                     }
                 })
-                .catch(error => {
-                    mostrarAlerta('error', 'Error de conexión');
-                });
+                .catch(() => alert('Error en la petición'));
             }
         }
 
-        function reservarMaquina(id) {
-            if (confirm('¿Reservar esta máquina para un cliente?')) {
-                fetch('{{ route("importaciones.maquinaria-disponible.reservar", ["id" => "ID_REEMPLAZAR"]) }}'.replace('ID_REEMPLAZAR', id), {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        mostrarAlerta('success', 'Máquina reservada exitosamente');
-                        cargarMaquinariaDisponible();
-                        cargarEstadisticasMaquinaria();
-                    }
-                });
-            }
-        }
-
-        function venderMaquina(id) {
-            if (confirm('¿Confirmar venta de esta máquina?')) {
-                fetch('{{ route("importaciones.maquinaria-disponible.vender", ["id" => "ID_REEMPLAZAR"]) }}'.replace('ID_REEMPLAZAR', id), {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        mostrarAlerta('success', 'Máquina marcada como vendida');
-                        cargarMaquinariaDisponible();
-                        cargarEstadisticasMaquinaria();
-                    }
-                });
-            }
-        }
-
-        function mostrarAlerta(tipo, mensaje) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${tipo}`;
-            alertDiv.innerHTML = `<i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${mensaje}</span>`;
-            
-            const mainContent = document.querySelector('.main-content');
-            mainContent.insertBefore(alertDiv, mainContent.firstChild);
-            
-            setTimeout(() => {
-                alertDiv.style.transition = 'opacity 0.5s';
-                alertDiv.style.opacity = '0';
-                setTimeout(() => alertDiv.remove(), 500);
-            }, 5000);
+        // ==================== FUNCIONES ÓRDENES ====================
+        
+        function cargarListaOrdenes() {
+            const ls=document.getElementById('listaOrdenesSection');
+            ls.innerHTML='<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+            fetch('/importaciones',{headers:{'X-Requested-With':'XMLHttpRequest','Accept':'application/json'}})
+            .then(r=>r.json()).then(d=>{if(d.success&&d.html) ls.innerHTML=d.html; else ls.innerHTML='<div class="text-center">No hay órdenes</div>';});
         }
 
         function mostrarFormularioCrear() {
-            document.getElementById('dashboardSection').style.display = 'none';
-            document.getElementById('listaOrdenesSection').style.display = 'none';
-            document.getElementById('formularioSection').style.display = 'block';
-            document.getElementById('verOrdenSection').style.display = 'none';
-            document.getElementById('maquinariaDisponibleSection').style.display = 'none';
-            document.getElementById('pageTitle').innerText = 'Nueva Orden de Compra';
-            document.getElementById('pageDescription').innerText = 'Registra una nueva orden de importación';
-            
-            cargarFormularioCrear();
+            document.getElementById('dashboardSection').style.display='none';
+            document.getElementById('listaOrdenesSection').style.display='none';
+            document.getElementById('formularioSection').style.display='block';
+            document.getElementById('verOrdenSection').style.display='none';
+            document.getElementById('maquinariaDisponibleSection').style.display='none';
+            document.getElementById('proveedoresSection').style.display='none';
+            document.getElementById('pageTitle').innerText='Nueva Orden';
+            const fs=document.getElementById('formularioSection');
+            fs.innerHTML='<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+            fetch('/importaciones/create',{headers:{'X-Requested-With':'XMLHttpRequest'}}).then(r=>r.json()).then(d=>{if(d.success&&d.html) fs.innerHTML=d.html;});
         }
 
-        function mostrarFormularioEditar(id) {
-            document.getElementById('dashboardSection').style.display = 'none';
-            document.getElementById('listaOrdenesSection').style.display = 'none';
-            document.getElementById('formularioSection').style.display = 'block';
-            document.getElementById('verOrdenSection').style.display = 'none';
-            document.getElementById('maquinariaDisponibleSection').style.display = 'none';
-            document.getElementById('pageTitle').innerText = 'Editar Orden de Compra';
-            document.getElementById('pageDescription').innerText = 'Modifica los datos de la orden';
-            
-            cargarFormularioEditar(id);
-        }
-
-        function cargarListaOrdenes(search = '') {
-            const listaSection = document.getElementById('listaOrdenesSection');
-            listaSection.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i><p style="margin-top: 16px;">Cargando órdenes...</p></div>';
-            
-            let url = '/importaciones';
-            if (search) {
-                url += '?search=' + encodeURIComponent(search);
-            }
-            
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.html) {
-                    listaSection.innerHTML = data.html;
-                } else {
-                    listaSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--warning);">No hay órdenes para mostrar</div>';
-                }
-            })
-            .catch(error => {
-                listaSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Error al cargar las órdenes</div>';
-            });
-        }
-
-        function cargarFormularioCrear() {
-            const formSection = document.getElementById('formularioSection');
-            formSection.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i><p style="margin-top: 16px;">Cargando formulario...</p></div>';
-            
-            fetch('/importaciones/create', {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.html) {
-                    formSection.innerHTML = data.html;
-                } else {
-                    formSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Error al cargar el formulario</div>';
-                }
-            })
-            .catch(error => {
-                formSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Error al cargar el formulario</div>';
-            });
-        }
-
-        function cargarFormularioEditar(id) {
-            const formSection = document.getElementById('formularioSection');
-            formSection.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i><p style="margin-top: 16px;">Cargando formulario...</p></div>';
-            
-            fetch(`/importaciones/${id}/edit`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.html) {
-                    formSection.innerHTML = data.html;
-                } else {
-                    formSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">' + (data.message || 'Error al cargar el formulario') + '</div>';
-                }
-            })
-            .catch(error => {
-                formSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Error al cargar el formulario</div>';
-            });
-        }
-
-        function cargarDetalleOrden(id) {
-            const verSection = document.getElementById('verOrdenSection');
-            verSection.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i><p style="margin-top: 16px;">Cargando detalles...</p></div>';
-            
-            fetch(`/importaciones/${id}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.html) {
-                    verSection.innerHTML = data.html;
-                } else {
-                    verSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">' + (data.message || 'Error al cargar los detalles') + '</div>';
-                }
-            })
-            .catch(error => {
-                verSection.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Error al cargar los detalles</div>';
-            });
-        }
-
-        function eliminarOrden(id) {
-            if (confirm('¿Estás seguro de eliminar esta orden?')) {
-                fetch(`/importaciones/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        mostrarListaOrdenes();
-                        mostrarAlerta('success', data.message);
-                    } else {
-                        mostrarAlerta('error', data.message);
-                    }
-                })
-                .catch(error => {
-                    mostrarAlerta('error', 'Error al eliminar la orden');
-                });
-            }
-        }
-
-        function volverAlDashboard() {
-            mostrarDashboard();
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('estadoModal');
-            if (event.target === modal) {
-                cerrarModal();
-            }
-        }
+        function cerrarModal() { document.getElementById('estadoModal').classList.remove('active'); }
+        function abrirModalEstado(id,estado){document.getElementById('maquinaId').value=id;document.getElementById('nuevoEstado').value=estado;document.getElementById('estadoModal').classList.add('active');}
+        
+        window.onclick=function(e){if(e.target===document.getElementById('estadoModal'))cerrarModal();}
     </script>
 </body>
 </html>

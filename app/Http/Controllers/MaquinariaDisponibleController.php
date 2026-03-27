@@ -8,38 +8,35 @@ use Illuminate\Http\Request;
 class MaquinariaDisponibleController extends Controller
 {
     /**
+     * Vista de prueba para maquinaria disponible
+     */
+    public function test()
+    {
+        return view('maquinaria-disponible-test');
+    }
+
+    /**
      * Obtener estadísticas de maquinaria
      */
     public function estadisticas()
     {
         try {
             $estadisticas = [
-                // Disponibles: estados que contienen "Disponible"
-                'disponibles' => Maquina::where('estado', 'like', '%Disponible%')
+                'disponibles' => Maquina::where('estado', 'disponible')
                                         ->where('activo', true)
                                         ->count(),
                 
-                // En Camino: estados que contienen "Camino", "Bodega" o "Tránsito"
-                'en_camino' => Maquina::where(function($q) {
-                                    $q->where('estado', 'like', '%Camino%')
-                                      ->orWhere('estado', 'like', '%Bodega%')
-                                      ->orWhere('estado', 'like', '%Tránsito%');
-                                })
-                                ->where('activo', true)
-                                ->count(),
-                
-                // Reservadas: estados que contienen "Reservada" o "Pendiente"
-                'reservadas' => Maquina::where(function($q) {
-                                    $q->where('estado', 'like', '%Reservada%')
-                                      ->orWhere('estado', 'like', '%Pendiente%');
-                                })
-                                ->where('activo', true)
-                                ->count(),
-                
-                // Vendidas: estados que contienen "Vendida"
-                'vendidas' => Maquina::where('estado', 'like', '%Vendida%')
+                'en_camino' => Maquina::whereIn('estado', ['en_transito', 'en_puerto', 'fabricacion', 'en_bodega'])
                                       ->where('activo', true)
                                       ->count(),
+                
+                'reservadas' => Maquina::where('estado', 'pendiente_despacho')
+                                       ->where('activo', true)
+                                       ->count(),
+                
+                'vendidas' => Maquina::where('estado', 'vendida')
+                                     ->where('activo', true)
+                                     ->count(),
             ];
             
             return response()->json($estadisticas);
@@ -89,10 +86,130 @@ class MaquinariaDisponibleController extends Controller
                 $query->where('precio_venta', '<=', $request->precio_max);
             }
             
-            $maquinas = $query->orderBy('created_at', 'desc')->paginate(10);
+            $maquinas = $query->orderBy('created_at', 'desc')->get();
+            
+            // Agrupar por orden
+            $grupos = [];
+            foreach($maquinas as $maquina) {
+                $ordenId = $maquina->ordenCompra ? $maquina->ordenCompra->id : 'sin_orden';
+                $ordenNumero = $maquina->ordenCompra ? $maquina->ordenCompra->numero_orden : 'Sin Orden';
+                
+                if (!isset($grupos[$ordenId])) {
+                    $grupos[$ordenId] = [
+                        'orden_id' => $ordenId,
+                        'orden_numero' => $ordenNumero,
+                        'maquinas' => []
+                    ];
+                }
+                $grupos[$ordenId]['maquinas'][] = $maquina;
+            }
             
             if ($request->ajax() && !$request->has('marcas')) {
-                $html = view('importaciones.maquinaria-lista', compact('maquinas'))->render();
+                // Construir HTML con agrupación
+                $html = '';
+                
+                if (empty($grupos)) {
+                    $html = '<tr><td colspan="8" class="text-center">No hay máquinas registradas</td></tr>';
+                } else {
+                    foreach ($grupos as $grupo) {
+                        $grupoId = 'grupo_' . $grupo['orden_id'];
+                        $totalMaquinas = count($grupo['maquinas']);
+                        
+                        // Checkbox para controlar el grupo (debe estar ANTES del header)
+                        $html .= '<input type="checkbox" id="' . $grupoId . '" class="toggle-grupo" style="display: none;">';
+                        
+                        // HEADER del grupo
+                        $html .= '<tr class="grupo-header" style="cursor: pointer; background: rgba(14, 165, 233, 0.05);">';
+                        $html .= '<td colspan="8" style="padding: 12px 16px;">';
+                        $html .= '<label for="' . $grupoId . '" style="cursor: pointer; display: flex; align-items: center; gap: 10px; width: 100%;">';
+                        $html .= '<span class="icono" style="display: inline-block; transition: transform 0.2s; font-size: 14px;">▶</span>';
+                        $html .= '<strong>Orden: ' . e($grupo['orden_numero']) . '</strong>';
+                        $html .= '<span class="badge badge-info" style="background: rgba(14, 165, 233, 0.2); color: var(--primary);">' . $totalMaquinas . ' máquinas</span>';
+                        $html .= '</label>';
+                        $html .= '</td>';
+                        $html .= '</tr>';
+                        
+                        // FILAS de máquinas del grupo (todas ocultas inicialmente)
+                        foreach ($grupo['maquinas'] as $maquina) {
+                            $modeloData = $maquina->modelo;
+                            $ordenData = $maquina->ordenCompra;
+                            
+                            // Obtener nombre de la máquina
+                            $nombreModelo = 'N/A';
+                            if ($modeloData && !empty($modeloData->modelo)) {
+                                $nombreModelo = $modeloData->modelo;
+                            } elseif ($ordenData && !empty($ordenData->modelo_maquina)) {
+                                $nombreModelo = $ordenData->modelo_maquina;
+                            }
+                            
+                            // Obtener marca/modelo combinado
+                            $marcaModelo = 'N/A';
+                            if ($modeloData) {
+                                $marca = $modeloData->marca ?? '';
+                                $modelo = $modeloData->modelo ?? '';
+                                if (!empty($marca) && !empty($modelo)) {
+                                    $marcaModelo = $marca . ' ' . $modelo;
+                                } elseif (!empty($marca)) {
+                                    $marcaModelo = $marca;
+                                } elseif (!empty($modelo)) {
+                                    $marcaModelo = $modelo;
+                                }
+                            } elseif ($ordenData && !empty($ordenData->modelo_maquina)) {
+                                $marcaModelo = $ordenData->modelo_maquina;
+                            }
+                            
+                            if (trim($marcaModelo) == 'N/A' || trim($marcaModelo) == 'N/A N/A') {
+                                $marcaModelo = 'N/A';
+                            }
+                            
+                            // Determinar clase del badge según estado
+                            $estadoClass = match($maquina->estado) {
+                                'disponible' => 'success',
+                                'vendida' => 'danger',
+                                'en_transito' => 'warning',
+                                'pendiente_despacho' => 'info',
+                                default => 'secondary'
+                            };
+                            
+                            $estadoIcono = match($maquina->estado) {
+                                'disponible' => '📦',
+                                'vendida' => '💰',
+                                'en_transito' => '🚢',
+                                'pendiente_despacho' => '⏳',
+                                default => '📌'
+                            };
+                            
+                            $estadoTexto = match($maquina->estado) {
+                                'disponible' => 'Disponible',
+                                'vendida' => 'Vendida',
+                                'en_transito' => 'En Tránsito',
+                                'pendiente_despacho' => 'Pendiente Despacho',
+                                default => ucfirst(str_replace('_', ' ', $maquina->estado))
+                            };
+                            
+                            $html .= '<tr class="grupo-fila" style="display: none;">';
+                            $html .= '<td><strong>' . $maquina->id . '</strong><br><small>Orden: ' . e($grupo['orden_numero']) . '</small></td>';
+                            $html .= '<td><strong>' . e($nombreModelo) . '</strong><br><small>Serie: ' . e($maquina->numero_serie ?? 'N/A') . '</small></td>';
+                            $html .= '<td>' . e($marcaModelo) . '</td>';
+                            $html .= '<td>' . ($maquina->año_fabricacion ?? 'N/A') . '</td>';
+                            $html .= '<td>' . e($maquina->numero_serie ?? 'N/A') . '</td>';
+                            $html .= '<td>$' . number_format($maquina->precio_venta ?? 0, 0, ',', '.') . '</td>';
+                            $html .= '<td><span class="badge badge-' . $estadoClass . '">' . $estadoIcono . ' ' . $estadoTexto . '</span></td>';
+                            $html .= '<td style="display: flex; gap: 6px; flex-wrap: wrap;">';
+                            $html .= '<button class="btn-sm" onclick="verMaquina(' . $maquina->id . ')"><i class="fas fa-eye"></i></button> ';
+                            $html .= '<button class="btn-sm" onclick="editarMaquina(' . $maquina->id . ')"><i class="fas fa-edit"></i></button> ';
+                            $html .= '<button class="btn-sm" onclick="abrirModalEstado(' . $maquina->id . ', \'' . $maquina->estado . '\')"><i class="fas fa-exchange-alt"></i></button> ';
+                            if ($maquina->estado !== 'vendida') {
+                                $html .= '<button class="btn-sm" onclick="reservarMaquina(' . $maquina->id . ')"><i class="fas fa-clock"></i></button> ';
+                                $html .= '<button class="btn-sm" onclick="venderMaquina(' . $maquina->id . ')"><i class="fas fa-dollar-sign"></i></button> ';
+                            }
+                            $html .= '<button class="btn-sm" onclick="eliminarMaquina(' . $maquina->id . ')"><i class="fas fa-trash"></i></button>';
+                            $html .= '</td>';
+                            $html .= '</tr>';
+                        }
+                    }
+                }
+                
                 return response()->json([
                     'success' => true,
                     'html' => $html
@@ -101,6 +218,8 @@ class MaquinariaDisponibleController extends Controller
             
             if ($request->has('marcas')) {
                 $marcas = \App\Models\MaquinaModelo::where('activo', true)
+                    ->whereNotNull('marca')
+                    ->where('marca', '!=', '')
                     ->distinct()
                     ->pluck('marca')
                     ->filter()
@@ -115,6 +234,7 @@ class MaquinariaDisponibleController extends Controller
             return view('importaciones.maquinaria-lista', compact('maquinas'));
             
         } catch (\Exception $e) {
+            \Log::error('Error en maquinariaDisponible: ' . $e->getMessage());
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
